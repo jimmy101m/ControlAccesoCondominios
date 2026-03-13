@@ -1,19 +1,19 @@
-# Plan de Delegación a Agentes IA — MVP Control de Acceso Condominal
+# Plan de Implementación del MVP — Control de Acceso Condominal
 
 > **Documento maestro de ejecución paso a paso.**
-> Cada paso está diseñado para ser delegado a un agente de IA de forma autónoma.
-> El agente debe recibir: este paso + el archivo `proyectoBASE.md` + los entregables de pasos anteriores ya completados.
+> Cada paso está diseñado como una guía de implementación para el programador.
+> Para ejecutar cada paso, se debe usar como contexto este documento, el archivo `proyectoBASE.md` y los entregables de pasos anteriores ya completados.
 
 ---
 
 ## Instrucciones generales para todos los pasos
 
-1. **Antes de ejecutar un paso**, el agente debe recibir como contexto:
+1. **Antes de ejecutar un paso**, el programador debe tomar como contexto:
    - El archivo `proyectoBASE.md` completo (especificación del MVP).
    - Este documento (`PLAN_DELEGACION_AGENTES.md`).
    - Los archivos/carpetas generados por los pasos anteriores marcados como completados.
-2. **Cada paso produce entregables concretos** (archivos, carpetas, código). El agente NO debe modificar entregables de pasos anteriores salvo que el paso actual lo indique explícitamente.
-3. **El agente debe respetar las limitaciones** listadas en cada paso. Si algo no está en el alcance del paso, no debe implementarlo.
+2. **Cada paso produce entregables concretos** (archivos, carpetas, código). No se deben modificar entregables de pasos anteriores salvo que el paso actual lo indique explícitamente.
+3. **Se deben respetar las limitaciones** listadas en cada paso. Si algo no está en el alcance del paso, no debe implementarse.
 4. **Stack obligatorio**: Backend Flask + PostgreSQL, Frontend Next.js (App Router), Nodo Local Flask + PostgreSQL.
 5. **Idioma del código**: inglés. Comentarios y documentación pueden ser en español.
 6. **Convenciones**: snake_case para Python, camelCase para TypeScript/JavaScript, kebab-case para rutas de URL.
@@ -63,7 +63,7 @@ PASO 21 (Documentación final)
 ### Contexto
 Este es el primer paso del MVP. No existe código previo. Se debe crear la estructura de carpetas y archivos base para los tres componentes del sistema: `backend/`, `frontend/`, `local-access-node/`. El objetivo es que cada componente sea ejecutable de forma independiente desde el inicio.
 
-### Qué se espera que haga el agente
+### Qué debe implementar el programador
 1. Crear la estructura de carpetas completa según la sección 10 de `proyectoBASE.md`.
 2. **Backend (`backend/`)**:
    - Crear `requirements.txt` con dependencias: Flask, Flask-SQLAlchemy, Flask-Migrate, Flask-CORS, Flask-JWT-Extended, psycopg2-binary, python-dotenv, Werkzeug, marshmallow.
@@ -108,18 +108,18 @@ Este es el primer paso del MVP. No existe código previo. Se debe crear la estru
 - Los archivos `__init__.py` de subcarpetas deben estar vacíos o con imports mínimos.
 - NO configurar Docker ni CI/CD.
 
-### Prompt sugerido para el agente
+### Resumen de implementación para el programador
 ```
-Eres un ingeniero de software senior. Tu tarea es crear la estructura inicial completa del proyecto "Control de Acceso Condominal" basándote en la especificación adjunta (proyectoBASE.md, sección 10).
+Objetivo: crear la estructura inicial completa del proyecto "Control de Acceso Condominal" basándose en la especificación adjunta (proyectoBASE.md, sección 10).
 
 El proyecto tiene tres componentes:
 1. backend/ — Flask + PostgreSQL
 2. frontend/ — Next.js con App Router + TypeScript + Tailwind
 3. local-access-node/ — Flask + PostgreSQL
 
-Crea TODA la estructura de carpetas y archivos base. Cada componente debe poder arrancarse de forma independiente, aunque sin funcionalidad aún. Incluye archivos de configuración, .env.example, .gitignore y un README raíz.
+Crear TODA la estructura de carpetas y archivos base. Cada componente debe poder arrancarse de forma independiente, aunque sin funcionalidad aún. Incluir archivos de configuración, .env.example, .gitignore y un README raíz.
 
-NO implementes lógica de negocio, modelos ni rutas funcionales. Solo estructura, configuración y archivos base.
+NO implementar lógica de negocio, modelos ni rutas funcionales. Solo estructura, configuración y archivos base.
 ```
 
 ---
@@ -135,7 +135,7 @@ La estructura del proyecto ya existe (PASO 1). Ahora se deben crear los modelos 
 - `app/config.py` y `app/extensions.py` con SQLAlchemy y Migrate configurados.
 - `requirements.txt` con dependencias listadas.
 
-### Qué se espera que haga el agente
+### Qué debe implementar el programador
 1. Crear cada modelo en su archivo dentro de `backend/app/models/`:
    - `role.py` — Modelo `Role` (id, name). Seed con: `resident`, `admin_local`, `guard`.
    - `user.py` — Modelo `User` (id, full_name, email, password_hash, role_id FK, status, created_at, updated_at). Incluir método `set_password()` y `check_password()` usando Werkzeug.
@@ -168,9 +168,9 @@ La estructura del proyecto ya existe (PASO 1). Ahora se deben crear los modelos 
 - Los modelos deben respetar EXACTAMENTE los campos de la sección 11.
 - `document_type` debe aceptar solo: `INE`, `pasaporte`, `licencia`.
 
-### Prompt sugerido para el agente
+### Resumen de implementación para el programador
 ```
-Eres un ingeniero backend senior especializado en Flask y SQLAlchemy. Tu tarea es crear todos los modelos de datos del backend principal para el sistema "Control de Acceso Condominal".
+Objetivo: crear todos los modelos de datos del backend principal para el sistema "Control de Acceso Condominal".
 
 CONTEXTO: La estructura del proyecto ya existe. Debes crear los modelos dentro de backend/app/models/ según la sección 11 del documento de especificación (proyectoBASE.md).
 
@@ -185,7 +185,7 @@ Requisitos:
 - Comando seed para roles base + admin de prueba
 - Migración inicial con Flask-Migrate
 
-NO crees rutas, endpoints ni servicios. Solo modelos, migración y seed.
+NO crear rutas, endpoints ni servicios. Solo modelos, migración y seed.
 ```
 
 ---
@@ -204,7 +204,7 @@ Los modelos del backend ya existen (PASO 2). Ahora se debe implementar el sistem
 - Flask-JWT-Extended configurado en extensions.py.
 - Comando seed que crea roles y usuario admin de prueba.
 
-### Qué se espera que haga el agente
+### Qué debe implementar el programador
 1. Crear `backend/app/routes/auth.py`:
    - `POST /api/v1/auth/login` — Recibe email + password, valida, retorna JWT + datos del usuario (id, full_name, role). Respuesta según sección 13.1.
    - `POST /api/v1/auth/me` — Retorna datos del usuario autenticado a partir del JWT.
@@ -239,9 +239,9 @@ Los modelos del backend ya existen (PASO 2). Ahora se debe implementar el sistem
 - NO implementar rate limiting (viene en robustecimiento).
 - La blocklist del JWT es en memoria; no necesita persistencia en DB para el MVP.
 
-### Prompt sugerido para el agente
+### Resumen de implementación para el programador
 ```
-Eres un ingeniero backend senior. Tu tarea es implementar el sistema de autenticación del backend principal.
+Objetivo: implementar el sistema de autenticación del backend principal.
 
 CONTEXTO: Los modelos User y Role ya existen con SQLAlchemy. Flask-JWT-Extended está configurado. Necesitas crear el flujo completo de login.
 
@@ -269,7 +269,7 @@ El sistema de autenticación ya funciona (PASO 3). Ahora se debe implementar la 
 - Auth funcional con JWT y decorador `role_required`.
 - Helpers de respuesta estandarizados.
 
-### Qué se espera que haga el agente
+### Qué debe implementar el programador
 1. Crear `backend/app/routes/residents.py`:
    - `POST /api/v1/residents` — Crear residente (solo `admin_local`). Crea User + ResidentProfile en una transacción. Body: full_name, email, password, condominium_id, unit_id.
    - `PATCH /api/v1/residents/{residentId}` — Actualizar residente (solo `admin_local`). Permite cambiar full_name, email, unit_id, status.
@@ -297,9 +297,9 @@ El sistema de autenticación ya funciona (PASO 3). Ahora se debe implementar la 
 - NO permitir que un residente se edite a sí mismo desde esta API.
 - Paginación simple: `page` + `per_page`, máximo 50 por página.
 
-### Prompt sugerido para el agente
+### Resumen de implementación para el programador
 ```
-Eres un ingeniero backend senior. Implementa la API REST de gestión de residentes.
+Objetivo: implementar la API REST de gestión de residentes.
 
 CONTEXTO: Auth con JWT funciona. Existe el decorador role_required. Los modelos User, Role, ResidentProfile, Condominium, Unit ya existen.
 
@@ -309,7 +309,7 @@ Endpoints a crear (todos protegidos, solo admin_local):
 3. GET /api/v1/residents — Listar residentes con paginación
 4. GET /api/v1/residents/{residentId} — Detalle de residente
 
-Incluye servicio con lógica de negocio y schemas Marshmallow. Valida unicidad de email. NO crear endpoints para condominios ni unidades.
+Incluir servicio con lógica de negocio y schemas Marshmallow. Validar unicidad de email. NO crear endpoints para condominios ni unidades.
 ```
 
 ---
@@ -324,7 +324,7 @@ Los residentes ya pueden ser gestionados (PASO 4). Ahora se implementa el core d
 - Modelos: Invitation, User, ResidentProfile, Unit.
 - CRUD de residentes.
 
-### Qué se espera que haga el agente
+### Qué debe implementar el programador
 1. Crear `backend/app/routes/invitations.py`:
    - `POST /api/v1/invitations` — Crear invitación (solo `resident`). Body según sección 13.3. Genera `token` único (UUID o similar seguro). Estado inicial: `sent`. Validar que `expires_at` sea futuro.
    - `GET /api/v1/invitations` — Listar invitaciones del residente autenticado. Filtrar por status opcionalmente. Paginación.
@@ -356,9 +356,9 @@ Los residentes ya pueden ser gestionados (PASO 4). Ahora se implementa el core d
 - Si la invitación ya está `cancelled`, `expired` o `used`, no se puede cancelar de nuevo.
 - Solo el residente dueño puede cancelar su invitación.
 
-### Prompt sugerido para el agente
+### Resumen de implementación para el programador
 ```
-Eres un ingeniero backend senior. Implementa la API de invitaciones para el sistema de acceso condominal.
+Objetivo: implementar la API de invitaciones para el sistema de acceso condominal.
 
 CONTEXTO: Auth, roles y residentes ya funcionan. El modelo Invitation ya existe con estados: draft, sent, registered, approved, cancelled, expired, used.
 
@@ -383,7 +383,7 @@ Las invitaciones ya se pueden crear (PASO 5). Ahora se implementa el flujo públ
 - Invitaciones con token único.
 - Estructura de storage para archivos.
 
-### Qué se espera que haga el agente
+### Qué debe implementar el programador
 1. Crear `backend/app/routes/visitors.py`:
    - `GET /api/v1/public/invitations/{token}` — Obtener metadatos públicos de la invitación. Retorna: estado, access_mode, expires_at, nombre del condominio. Si está expirada, retornar error. Si ya fue registrada/usada/cancelada, retornar error apropiado.
    - `POST /api/v1/public/invitations/{token}/register` — Registrar visitante. Body: full_name, phone, document_type, document_number, plate_number (si vehicular). Crea registro en tabla `visitors`. Vincula visitor con invitation. Cambia estado de invitación a `registered`. Validar que `document_type` sea `INE`, `pasaporte` o `licencia`.
@@ -417,9 +417,9 @@ Las invitaciones ya se pueden crear (PASO 5). Ahora se implementa el flujo públ
 - Validar tamaño y tipo de archivos estrictamente.
 - Usar `secure_filename` de Werkzeug para prevenir path traversal.
 
-### Prompt sugerido para el agente
+### Resumen de implementación para el programador
 ```
-Eres un ingeniero backend senior. Implementa los endpoints PÚBLICOS de registro de visitante por link de invitación.
+Objetivo: implementar los endpoints PÚBLICOS de registro de visitante por link de invitación.
 
 CONTEXTO: Las invitaciones ya se crean con token seguro. Los modelos Invitation y Visitor existen. Hay carpetas storage/faces/ y storage/documents/.
 
@@ -443,7 +443,7 @@ El visitante ya puede registrarse (PASO 6). Ahora el residente debe poder confir
 - Flujo completo: crear invitación → visitante se registra con datos/selfie/documento.
 - Modelos: Invitation (estado `registered`), Visitor, AccessGrant.
 
-### Qué se espera que haga el agente
+### Qué debe implementar el programador
 1. Agregar endpoint en `backend/app/routes/invitations.py`:
    - `POST /api/v1/invitations/{invitationId}/confirm-visitor` — Solo el residente dueño. Valida que la invitación esté en estado `registered`. Cambia estado a `approved`. Registra `confirmed_at`. Crea un `AccessGrant` con status `pending_sync`, `valid_from` = now, `valid_until` = `expires_at` de la invitación, `single_use` = true.
 2. Actualizar `backend/app/services/invitation_service.py`:
@@ -470,9 +470,9 @@ El visitante ya puede registrarse (PASO 6). Ahora el residente debe poder confir
 - Solo el residente dueño puede confirmar.
 - Una invitación solo puede confirmarse UNA vez.
 
-### Prompt sugerido para el agente
+### Resumen de implementación para el programador
 ```
-Eres un ingeniero backend senior. Implementa la confirmación de visitante y generación de access grants.
+Objetivo: implementar la confirmación de visitante y generación de access grants.
 
 CONTEXTO: El flujo de invitación→registro ya funciona. Cuando un visitante se registra, la invitación pasa a estado "registered". Ahora el residente debe poder confirmar, lo que genera un AccessGrant.
 
@@ -496,7 +496,7 @@ El flujo principal ya funciona hasta la generación de access grants (PASO 7). A
 - Auth, roles, invitaciones, visitantes, access grants, auditoría.
 - Decorador `role_required`.
 
-### Qué se espera que haga el agente
+### Qué debe implementar el programador
 1. Crear `backend/app/routes/guard.py`:
    - `GET /api/v1/access/upcoming` — Solo `guard` y `admin_local`. Lista visitantes con access_grant activo o pending_sync cuya `valid_until` sea futura. Incluir: nombre visitante, tipo acceso, placa, unidad destino, vigencia.
    - `GET /api/v1/access/history` — Solo `guard` y `admin_local`. Historial de access_events. Filtros por fecha (`from`, `to`). Paginación.
@@ -520,9 +520,9 @@ El flujo principal ya funciona hasta la generación de access grants (PASO 7). A
 - NO implementar websockets para actualizaciones en tiempo real.
 - Paginación simple con `page` + `per_page`.
 
-### Prompt sugerido para el agente
+### Resumen de implementación para el programador
 ```
-Eres un ingeniero backend senior. Implementa las APIs de consulta para guardia y administrador.
+Objetivo: implementar las APIs de consulta para guardia y administrador.
 
 CONTEXTO: El flujo completo de invitaciones y access grants ya funciona. Hay roles guard y admin_local con decorador role_required.
 
@@ -551,7 +551,7 @@ Las APIs de consulta ya existen (PASO 8). Ahora se agrega el endpoint de métric
 - AccessGrants con estados incluyendo sync_error.
 - AuditLogs registrándose.
 
-### Qué se espera que haga el agente
+### Qué debe implementar el programador
 1. Crear `backend/app/routes/metrics.py`:
    - `GET /api/v1/metrics/operational` — Solo `admin_local`. Retorna:
      - **De negocio**: conteo por estado de invitaciones (creadas, registradas, aprobadas, canceladas, expiradas), accesos concedidos/denegados.
@@ -571,9 +571,9 @@ Las APIs de consulta ya existen (PASO 8). Ahora se agrega el endpoint de métric
 - Las queries deben ser eficientes (usar COUNT, GROUP BY).
 - Filtros opcionales de fecha y condominio.
 
-### Prompt sugerido para el agente
+### Resumen de implementación para el programador
 ```
-Eres un ingeniero backend senior. Implementa el endpoint de métricas operativas.
+Objetivo: implementar el endpoint de métricas operativas.
 
 CONTEXTO: Todos los modelos del sistema ya existen y tienen datos. Se necesita un endpoint que resuma el estado del sistema.
 
@@ -584,7 +584,7 @@ Implementa:
    - Errores de sincronización
    - Porcentaje de registros con selfie/documento
 
-Usa queries agregadas eficientes (COUNT, GROUP BY). Filtros opcionales por fecha y condominio.
+Usar queries agregadas eficientes (COUNT, GROUP BY). Filtros opcionales por fecha y condominio.
 ```
 
 ---
@@ -603,7 +603,7 @@ La estructura del nodo local ya existe (PASO 1). Ahora se crean los modelos SQLA
 - `app/__init__.py`, `config.py`, `extensions.py`.
 - `requirements.txt`.
 
-### Qué se espera que haga el agente
+### Qué debe implementar el programador
 1. Crear modelos en `local-access-node/app/models/`:
    - `access_user.py` — Modelo `AccessUser` con TODOS los campos de sección 12.1. Enums para: `user_type` (resident, visitor), `face_status` (enrolled, missing, invalid), `access_status` (allowed, blocked, expired, used), `access_mode` (pedestrian, vehicle).
    - `device.py` — Modelo `Device` con campos de sección 12.2. Enums para `device_type` y `status`.
@@ -625,9 +625,9 @@ La estructura del nodo local ya existe (PASO 1). Ahora se crean los modelos SQLA
 - El nodo local usa su PROPIA base de datos PostgreSQL (diferente del backend principal).
 - Los campos deben coincidir EXACTAMENTE con la sección 12.
 
-### Prompt sugerido para el agente
+### Resumen de implementación para el programador
 ```
-Eres un ingeniero backend senior. Crea los modelos SQLAlchemy del nodo local de acceso.
+Objetivo: crear los modelos SQLAlchemy del nodo local de acceso.
 
 CONTEXTO: El nodo local es un servicio Flask independiente con su propia base PostgreSQL. Los modelos representan usuarios autorizados localmente, dispositivos, eventos de acceso y logs de sincronización.
 
@@ -637,7 +637,7 @@ Modelos según sección 12 de la especificación:
 3. AccessEvent — registro de intentos de acceso
 4. SyncLog — registro de sincronizaciones con el core
 
-Incluye enums para todos los campos con valores fijos, migración inicial y seed para un device simulador (gate-1). NO crees rutas ni servicios.
+Incluir enums para todos los campos con valores fijos, migración inicial y seed para un device simulador (gate-1). NO crear rutas ni servicios.
 ```
 
 ---
@@ -651,7 +651,7 @@ Los modelos del nodo local ya existen (PASO 10). Ahora se implementan TODAS las 
 - Modelos: AccessUser, Device, AccessEvent, SyncLog.
 - Configuración del nodo local con API_KEY.
 
-### Qué se espera que haga el agente
+### Qué debe implementar el programador
 1. Crear middleware de autenticación por API Key:
    - `local-access-node/app/utils/auth.py` — Decorador `api_key_required` que valida el header `X-API-Key` contra la variable `LOCAL_API_KEY`.
 2. Crear `local-access-node/app/routes/health.py`:
@@ -685,9 +685,9 @@ Los modelos del nodo local ya existen (PASO 10). Ahora se implementan TODAS las 
 - Las 7 reglas de negocio de la sección 15 deben implementarse EXACTAMENTE.
 - `face_image_base64` en el upsert debe decodificarse y guardarse como archivo, no almacenarse en la DB como base64.
 
-### Prompt sugerido para el agente
+### Resumen de implementación para el programador
 ```
-Eres un ingeniero backend senior. Implementa TODAS las APIs del nodo local de acceso.
+Objetivo: implementar TODAS las APIs del nodo local de acceso.
 
 CONTEXTO: El nodo local es un servicio Flask independiente. Sus modelos ya existen. Se comunica con el backend principal mediante API Key (header X-API-Key).
 
@@ -701,7 +701,7 @@ APIs a implementar (sección 14 de la especificación):
 7. POST /api/v1/access-events/manual-arrival — registrar llegada manual
 8. GET /api/v1/access-events — historial local
 
-Todas protegidas con API Key excepto health. Implementa servicios de decisión, almacenamiento facial y sync logs. El face_image_base64 se decodifica y guarda como archivo.
+Todas protegidas con API Key excepto health. Implementar servicios de decisión, almacenamiento facial y sync logs. El face_image_base64 se decodifica y guarda como archivo.
 ```
 
 ---
@@ -716,7 +716,7 @@ Tanto el backend principal (PASOS 1-9) como el nodo local (PASOS 10-11) ya funci
 - Nodo local: `POST /api/v1/access-users/upsert` y `POST /api/v1/access-users/revoke`.
 - Configuración: `LOCAL_NODE_BASE_URL` y `LOCAL_NODE_API_KEY` en env del backend.
 
-### Qué se espera que haga el agente
+### Qué debe implementar el programador
 1. Crear `backend/app/services/access_sync_service.py`:
    - `sync_grant_to_local_node(access_grant_id)` — Toma un grant con status `pending_sync`, construye el payload para el endpoint `/api/v1/access-users/upsert` del nodo local (incluyendo face_image_base64 si hay selfie), envía la petición HTTP, actualiza status a `active` si exitoso o `sync_error` si falla. Registra en audit_log.
    - `revoke_grant_on_local_node(access_grant_id)` — Envía petición a `/api/v1/access-users/revoke`. Actualiza status del grant a `revoked`.
@@ -745,9 +745,9 @@ Tanto el backend principal (PASOS 1-9) como el nodo local (PASOS 10-11) ya funci
 - El reintento es manual por el admin.
 - Timeout de 10 segundos por petición.
 
-### Prompt sugerido para el agente
+### Resumen de implementación para el programador
 ```
-Eres un ingeniero backend senior. Implementa el servicio de sincronización entre el backend principal y el nodo local.
+Objetivo: implementar el servicio de sincronización entre el backend principal y el nodo local.
 
 CONTEXTO: El backend crea AccessGrants con status pending_sync. El nodo local tiene POST /api/v1/access-users/upsert y POST /api/v1/access-users/revoke protegidos por API Key.
 
@@ -771,7 +771,7 @@ El nodo local ya puede decidir accesos (PASO 11) y recibe permisos del backend (
 - Nodo local: AccessEvents creándose con cada decisión.
 - Backend: config `CORE_CALLBACK_URL` y `CORE_CALLBACK_API_KEY`.
 
-### Qué se espera que haga el agente
+### Qué debe implementar el programador
 1. **En el backend principal**, crear `backend/app/routes/access.py`:
    - `POST /internal/v1/local-access/events` — Protegido con API Key (distinto de JWT). Recibe payload del nodo local según sección 14.9. Crea registro en `access_events` del core. Vincula con access_grant si corresponde.
 2. Crear middleware en backend para validar API Key interna:
@@ -795,9 +795,9 @@ El nodo local ya puede decidir accesos (PASO 11) y recibe permisos del backend (
 - Si el core no responde, el evento queda local sin sincronizar. Se puede reintentar luego.
 - El callback es síncrono pero NO bloquea la respuesta al dispositivo/simulador (la decisión ya se dio).
 
-### Prompt sugerido para el agente
+### Resumen de implementación para el programador
 ```
-Eres un ingeniero backend senior. Implementa el callback del nodo local al backend principal.
+Objetivo: implementar el callback del nodo local al backend principal.
 
 CONTEXTO: El nodo local genera eventos de acceso. Debe reportarlos al core para bitácora centralizada.
 
@@ -822,7 +822,7 @@ El nodo local está completamente funcional (PASOS 10-13). Ahora se crea la inte
 - Device simulador "gate-1" creado por seed.
 - Carpeta `templates/simulator/`.
 
-### Qué se espera que haga el agente
+### Qué debe implementar el programador
 1. Crear `local-access-node/app/routes/simulator.py`:
    - `GET /simulator` — Renderiza la página HTML del simulador.
 2. Crear `local-access-node/templates/simulator/screen.html`:
@@ -852,9 +852,9 @@ El nodo local está completamente funcional (PASOS 10-13). Ahora se crea la inte
 - El API Key se puede incluir en la configuración del template (es un entorno local de pruebas).
 - NO implementar reconocimiento facial real; solo simula el flujo.
 
-### Prompt sugerido para el agente
+### Resumen de implementación para el programador
 ```
-Eres un ingeniero fullstack. Crea el simulador web de control de acceso para el nodo local.
+Objetivo: crear el simulador web de control de acceso para el nodo local.
 
 CONTEXTO: El nodo local tiene todas las APIs funcionales. Necesitas crear una página HTML que permita probar el flujo de acceso.
 
@@ -868,7 +868,7 @@ Crea:
    - Resultado grande y claro: ACCESO CONCEDIDO (verde) o DENEGADO (rojo)
    - Historial de últimos 10 eventos del día
 
-Usa HTML + CSS (Tailwind CDN) + JS vanilla. Incluye X-API-Key en las llamadas. NO uses React/Vue.
+Usar HTML + CSS (Tailwind CDN) + JS vanilla. Incluir X-API-Key en las llamadas. NO usar React/Vue.
 ```
 
 ---
@@ -888,7 +888,7 @@ El backend principal tiene auth funcional con JWT (PASO 3). Ahora se crea la pá
 - `src/types/index.ts` con interfaces.
 - Backend: `POST /api/v1/auth/login`, `POST /api/v1/auth/me`, `POST /api/v1/auth/logout`.
 
-### Qué se espera que haga el agente
+### Qué debe implementar el programador
 1. Crear `src/lib/auth.ts`:
    - Funciones: `login(email, password)`, `logout()`, `getMe()`, `getToken()`, `isAuthenticated()`.
    - Almacenar JWT en `localStorage` (MVP; para producción se migrará a httpOnly cookie).
@@ -929,9 +929,9 @@ El backend principal tiene auth funcional con JWT (PASO 3). Ahora se crea la pá
 - NO implementar refresh token automático.
 - El diseño debe ser limpio con Tailwind pero no necesita ser perfecto.
 
-### Prompt sugerido para el agente
+### Resumen de implementación para el programador
 ```
-Eres un ingeniero frontend senior con Next.js. Implementa el login y sistema de autenticación.
+Objetivo: implementar el login y el sistema de autenticación.
 
 CONTEXTO: El backend tiene POST /api/v1/auth/login que retorna JWT + datos de usuario. Hay tres roles: resident, admin_local, guard.
 
@@ -943,7 +943,7 @@ Implementa:
 5. Layout base con header, logout y botón WhatsApp flotante
 6. Store de autenticación con Context API o Zustand
 
-Usa TypeScript + Tailwind. NO implementar registro, reset de password ni refresh token.
+Usar TypeScript + Tailwind. NO implementar registro, reset de password ni refresh token.
 ```
 
 ---
@@ -958,7 +958,7 @@ El login funciona y redirige al residente a `/resident` (PASO 15). Ahora se cons
 - Backend: endpoints de invitaciones (crear, listar, cancelar, confirmar).
 - Tipos TypeScript definidos.
 
-### Qué se espera que haga el agente
+### Qué debe implementar el programador
 1. Crear `src/app/resident/page.tsx` — Dashboard principal:
    - Resumen: invitaciones activas, pendientes de confirmación, total del mes.
    - Lista de invitaciones recientes con status badge (colores por estado).
@@ -995,9 +995,9 @@ El login funciona y redirige al residente a `/resident` (PASO 15). Ahora se cons
 - El residente solo ve SUS invitaciones.
 - Diseño responsive con Tailwind pero no necesita ser perfecto visualmente.
 
-### Prompt sugerido para el agente
+### Resumen de implementación para el programador
 ```
-Eres un ingeniero frontend senior. Implementa el dashboard completo del residente.
+Objetivo: implementar el dashboard completo del residente.
 
 CONTEXTO: Login funciona. Backend tiene: POST/GET /api/v1/invitations, POST cancel, POST confirm-visitor.
 
@@ -1007,7 +1007,7 @@ Páginas:
 3. /resident/invitations/[id] — Detalle con confirmación/cancelación de visitante
 4. /resident/invitations — Historial con filtros y paginación
 
-Componentes: StatusBadge, VisitorCard, CopyLinkButton. Usa TypeScript + Tailwind. El residente solo ve sus invitaciones.
+Componentes: StatusBadge, VisitorCard, CopyLinkButton. Usar TypeScript + Tailwind. El residente solo ve sus invitaciones.
 ```
 
 ---
@@ -1021,7 +1021,7 @@ El residente ya puede crear invitaciones y generar links (PASO 16). Ahora se con
 - Backend: endpoints públicos `GET/POST /api/v1/public/invitations/{token}/...`.
 - Frontend: proyecto Next.js con tipos y api client.
 
-### Qué se espera que haga el agente
+### Qué debe implementar el programador
 1. Crear `src/app/invitation/[token]/page.tsx` — Página principal de registro:
    - Al cargar, llama a `GET /api/v1/public/invitations/{token}` para obtener metadatos.
    - Si la invitación expiró/canceló/ya registrada, mostrar mensaje claro y NO permitir registro.
@@ -1061,9 +1061,9 @@ El residente ya puede crear invitaciones y generar links (PASO 16). Ahora se con
 - Si el token no existe o expiró, mostrar error claro sin revelar información interna.
 - NO almacenar datos en localStorage del visitante.
 
-### Prompt sugerido para el agente
+### Resumen de implementación para el programador
 ```
-Eres un ingeniero frontend senior. Implementa la página pública de registro de visitante por link.
+Objetivo: implementar la página pública de registro de visitante por link.
 
 CONTEXTO: Un residente genera un link con token. El visitante lo abre en su celular y registra sus datos.
 
@@ -1089,7 +1089,7 @@ El dashboard del residente ya está completo (PASO 16). Ahora se construye el da
 - Auth con rol `admin_local`.
 - Backend: CRUD residentes, invitaciones por condominio, access grants, errores de sync, audit logs, métricas.
 
-### Qué se espera que haga el agente
+### Qué debe implementar el programador
 1. Crear `src/app/admin/page.tsx` — Dashboard principal:
    - Métricas clave (resumen de `/api/v1/metrics/operational`): invitaciones activas, grants pendientes, errores sync.
    - Accesos rápidos a secciones.
@@ -1122,9 +1122,9 @@ El dashboard del residente ya está completo (PASO 16). Ahora se construye el da
 - NO implementar gráficas complejas de métricas (solo números/contadores).
 - El admin solo ve datos de su condominio.
 
-### Prompt sugerido para el agente
+### Resumen de implementación para el programador
 ```
-Eres un ingeniero frontend senior. Implementa el dashboard del administrador local.
+Objetivo: implementar el dashboard del administrador local.
 
 CONTEXTO: Auth funciona con rol admin_local. Backend tiene: CRUD residentes, invitaciones, access grants, sync errors, audit logs, métricas.
 
@@ -1137,7 +1137,7 @@ Páginas:
 6. /admin/audit — Logs de auditoría con filtros
 7. Layout con sidebar de navegación
 
-Usa TypeScript + Tailwind. NO implementar gestión de condominios/unidades ni gráficas complejas.
+Usar TypeScript + Tailwind. NO implementar gestión de condominios/unidades ni gráficas complejas.
 ```
 
 ---
@@ -1151,7 +1151,7 @@ Los dashboards de residente y admin están completos (PASOS 16, 18). Ahora se co
 - Auth con rol `guard`.
 - Backend: `GET /api/v1/access/upcoming`, `GET /api/v1/access/history`.
 
-### Qué se espera que haga el agente
+### Qué debe implementar el programador
 1. Crear `src/app/guard/page.tsx` — Dashboard del guardia:
    - Sección "Visitantes esperados hoy" (upcoming).
    - Cada tarjeta de visitante muestra: nombre, foto facial (thumbnail), unidad destino, tipo de acceso, vigencia, placa si vehicular.
@@ -1177,9 +1177,9 @@ Los dashboards de residente y admin están completos (PASOS 16, 18). Ahora se co
 - Interfaz simple y clara, optimizada para uso rápido en caseta.
 - NO implementar búsqueda avanzada.
 
-### Prompt sugerido para el agente
+### Resumen de implementación para el programador
 ```
-Eres un ingeniero frontend senior. Implementa el dashboard del guardia.
+Objetivo: implementar el dashboard del guardia.
 
 CONTEXTO: Auth funciona con rol guard. Backend tiene GET /api/v1/access/upcoming y GET /api/v1/access/history.
 
@@ -1188,7 +1188,7 @@ Páginas:
 2. /guard/history — Historial de accesos con filtros y paginación
 3. Layout con tabs de navegación
 
-El guardia es solo consulta. NO puede modificar nada. Interfaz simple y rápida. Usa TypeScript + Tailwind.
+El guardia es solo consulta. NO puede modificar nada. Interfaz simple y rápida. Usar TypeScript + Tailwind.
 ```
 
 ---
@@ -1207,7 +1207,7 @@ Todos los componentes del sistema ya están construidos (PASOS 1-19). Ahora se d
 - Nodo local completo con simulador.
 - Frontend completo.
 
-### Qué se espera que haga el agente
+### Qué debe implementar el programador
 1. Crear script de setup de datos de prueba: `backend/scripts/seed_test_data.py`:
    - Crear un condominio de prueba.
    - Crear 3 unidades.
@@ -1249,9 +1249,9 @@ Todos los componentes del sistema ya están construidos (PASOS 1-19). Ahora se d
 - Las pruebas asumen que los tres servicios están corriendo localmente.
 - NO usar frameworks de testing como pytest para las pruebas de integración (usar scripts simples con requests).
 
-### Prompt sugerido para el agente
+### Resumen de implementación para el programador
 ```
-Eres un ingeniero QA senior. Crea pruebas de integración end-to-end para el sistema de acceso condominal.
+Objetivo: crear pruebas de integración end-to-end para el sistema de acceso condominal.
 
 CONTEXTO: Hay 3 servicios: backend (port 5000), nodo local (port 5500), frontend (port 3000). Todos ya están implementados.
 
@@ -1261,7 +1261,7 @@ Crea:
 3. test_cancel_flow.py — crear → registrar → confirmar → cancelar → verify deny
 4. test_expiration_flow.py — crear invitación expirada → verify error
 
-Usa requests de Python. Los 3 servicios deben estar corriendo. Documenta bugs encontrados.
+Usar requests de Python. Los 3 servicios deben estar corriendo. Documentar bugs encontrados.
 ```
 
 ---
@@ -1274,7 +1274,7 @@ El MVP está completo y probado (PASOS 1-20). Ahora se genera toda la documentac
 ### Lo que ya existe (PASOS 1-20)
 - Todo el sistema funcional y probado.
 
-### Qué se espera que haga el agente
+### Qué debe implementar el programador
 1. Completar `docs/README.md`:
    - Descripción del proyecto.
    - Cómo clonar e instalar.
@@ -1308,9 +1308,9 @@ El MVP está completo y probado (PASOS 1-20). Ahora se genera toda la documentac
 - La documentación debe reflejar el estado REAL del código, no la especificación teórica.
 - Incluir limitaciones conocidas del MVP honestamente.
 
-### Prompt sugerido para el agente
+### Resumen de implementación para el programador
 ```
-Eres un technical writer senior. Genera la documentación completa del MVP del sistema de acceso condominal.
+Objetivo: generar la documentación completa del MVP del sistema de acceso condominal.
 
 CONTEXTO: El sistema está completo con 3 componentes: backend, frontend, nodo local. Revisa el código real para documentar lo que realmente se implementó.
 
@@ -1322,7 +1322,7 @@ Documentos a generar:
 5. docs/API_LOCAL_NODE.md — APIs del nodo local
 6. local-access-node/docs/ — README, API, DATA_MODEL, INTEGRATION
 
-Documenta el estado REAL del código. Incluye limitaciones conocidas y credenciales de prueba.
+Documentar el estado REAL del código. Incluir limitaciones conocidas y credenciales de prueba.
 ```
 
 ---
@@ -1355,10 +1355,10 @@ Documenta el estado REAL del código. Incluye limitaciones conocidas y credencia
 
 ---
 
-# NOTAS PARA EL OPERADOR
+# NOTAS PARA IMPLEMENTACIÓN
 
 1. **Paralelismo posible**: Los pasos 8-9 pueden ejecutarse en paralelo con 5-7. Los pasos 10-11 y 14 pueden ejecutarse en paralelo con 3-9. Los pasos 15-19 pueden ejecutarse en paralelo con 10-13 (solo necesitan el backend básico de PASO 3).
-2. **Cada agente recibe**: este documento + `proyectoBASE.md` + los archivos de los pasos previos completados.
+2. **Para cada paso**: usar este documento + `proyectoBASE.md` + los archivos de los pasos previos completados.
 3. **Verificación entre pasos**: Después de cada paso, verificar que los entregables existen y que el componente sigue arrancando correctamente.
-4. **Base de datos**: Cada agente debe asumir que PostgreSQL está corriendo localmente. El PASO 1 no crea las DBs; se deben crear manualmente antes del PASO 2.
+4. **Base de datos**: Se debe asumir que PostgreSQL está corriendo localmente. El PASO 1 no crea las DBs; se deben crear manualmente antes del PASO 2.
 5. **Puertos**: Backend en 5000, Frontend en 3000, Nodo Local en 5500.
