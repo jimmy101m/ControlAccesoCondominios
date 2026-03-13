@@ -1,0 +1,62 @@
+# .gitignore
+
+# ─── Python ───────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+.venv/
+venv/
+env/
+ENV/
+pip-wheel-metadata/
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+
+# ─── Flask / SQLAlchemy ───────────────────────────────────────────────────────
+instance/
+*.db
+*.sqlite3
+migrations/versions/*.pyc
+
+# ─── Variables de entorno ─────────────────────────────────────────────────────
+.env
+.env.local
+.env.*.local
+!.env.example
+!.env.local.example
+
+# ─── Node.js / Next.js ────────────────────────────────────────────────────────
+node_modules/
+.next/
+out/
+.turbo/
+.vercel/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.pnpm-store/
+
+# ─── Storage (imágenes y documentos subidos) ──────────────────────────────────
+backend/storage/faces/*
+backend/storage/documents/*
+local-access-node/storage/faces/*
+!backend/storage/faces/.gitkeep
+!backend/storage/documents/.gitkeep
+!local-access-node/storage/faces/.gitkeep
+
+# ─── IDEs y editores ──────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
