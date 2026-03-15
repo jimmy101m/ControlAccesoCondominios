@@ -6,7 +6,7 @@
 - Auth (email + contraseña)
 - Invitaciones y registro por link web
 - Confirmación del residente
-- Sincronización al nodo local
+- Sincronización al Motor de Acceso
 - Decisión local de acceso (grant / deny)
 - Dashboard residente
 - Dashboard administrador / guardia

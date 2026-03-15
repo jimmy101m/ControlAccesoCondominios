@@ -1,4 +1,4 @@
-# API — Nodo Local de Acceso
+# API — Motor de Acceso de Acceso
 
 > Base path: `/api/v1`  
 > Autenticación: cabecera `X-API-Key: <LOCAL_API_KEY>`
@@ -50,7 +50,7 @@ Evalúa si un usuario puede pasar y registra el evento resultante.
 ### Callback al core
 
 #### `POST /internal/v1/local-access/events`
-Recibe notificación de evento desde el nodo local hacia el backend principal.
+Recibe notificación de evento desde el Motor de Acceso hacia el backend principal.
 Protegido con `CORE_CALLBACK_API_KEY`.
 
 ---

@@ -10,8 +10,8 @@
 - [ ] Dashboard residente básico
 - [ ] Dashboard admin básico
 
-## Fase 2 — Nodo local y sincronización
-- [ ] Servicio `local-access-node`
+## Fase 2 — Motor de Acceso y sincronización
+- [ ] Servicio `motor-de-acceso`
 - [ ] Alta/revocación de usuarios locales
 - [ ] Simulador de acceso
 - [ ] Registro de eventos

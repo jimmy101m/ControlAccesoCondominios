@@ -1,8 +1,8 @@
-# Nodo Local de Acceso
+# Motor de Acceso de Acceso
 
 ## ¿Qué es?
 
-El `local-access-node` es el servicio Flask que corre en las instalaciones del condominio. Mantiene una base de datos local con los permisos de acceso sincronizados desde el backend principal y decide en tiempo real si un visitante o residente puede pasar.
+El `motor-de-acceso` es el servicio Flask que corre en las instalaciones del condominio. Mantiene una base de datos local con los permisos de acceso sincronizados desde el backend principal y decide en tiempo real si un visitante o residente puede pasar.
 
 ## ¿Qué resuelve?
 
@@ -14,7 +14,7 @@ El `local-access-node` es el servicio Flask que corre en las instalaciones del c
 ## Cómo correrlo localmente
 
 ```bash
-cd local-access-node
+cd motor-de-acceso
 cp .env.example .env
 # Ajustar variables en .env
 pip install -r requirements.txt

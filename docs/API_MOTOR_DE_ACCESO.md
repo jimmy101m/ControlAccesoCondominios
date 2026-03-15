@@ -1,9 +1,9 @@
-# API Nodo Local
+# API Motor de Acceso
 
 > Base path: `/api/v1`  
-> Ver también: `local-access-node/docs/API.md`
+> Ver también: `motor-de-acceso/docs/API.md`
 
-Documento pendiente de redacción con todos los endpoints del nodo local.
+Documento pendiente de redacción con todos los endpoints del Motor de Acceso.
 
 ## Grupos de endpoints
 - `GET /api/v1/health`

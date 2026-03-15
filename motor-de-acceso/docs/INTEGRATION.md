@@ -1,4 +1,4 @@
-# Integración — Backend Core ↔ Nodo Local
+# Integración — Backend Core ↔ Motor de Acceso
 
 ## Flujo de sincronización
 
@@ -6,7 +6,7 @@
 Cuando el residente confirma a un visitante:
 
 ```
-POST /api/v1/access-users/upsert  →  Nodo local
+POST /api/v1/access-users/upsert  →  Motor de Acceso
 X-API-Key: <LOCAL_NODE_API_KEY>
 ```
 
@@ -16,7 +16,7 @@ El nodo crea o actualiza el registro en `access_users` con `access_status = allo
 Cuando el residente cancela una invitación:
 
 ```
-POST /api/v1/access-users/revoke  →  Nodo local
+POST /api/v1/access-users/revoke  →  Motor de Acceso
 X-API-Key: <LOCAL_NODE_API_KEY>
 ```
 
@@ -38,14 +38,14 @@ El core registra el evento en su tabla `access_events`.
 
 1. El residente cancela la invitación en el frontend.
 2. El backend core revoca el `access_grant`.
-3. El core llama `POST /api/v1/access-users/revoke` en el nodo local.
+3. El core llama `POST /api/v1/access-users/revoke` en el Motor de Acceso.
 4. Si el visitante intenta pasar, recibe `deny` con razón `blocked`.
 
 ---
 
 ## Manejo de errores y reintentos
 
-- Si el nodo local no está disponible al publicar un permiso, el core registra el `access_grant` con `status = sync_error`.
+- Si el Motor de Acceso no está disponible al publicar un permiso, el core registra el `access_grant` con `status = sync_error`.
 - El core deberá implementar una cola de reintentos (Fase 3) que consulte los `access_grants` con `status = sync_error` y reintente la sincronización.
 - Si el nodo no puede enviar el callback al core, el evento queda con `synced_to_core_at = null` y deberá ser recogido por un proceso de reconciliación posterior.
 
@@ -55,7 +55,7 @@ El core registra el evento en su tabla `access_events`.
 
 | Variable              | Componente  | Descripción                                    |
 |-----------------------|-------------|------------------------------------------------|
-| LOCAL_NODE_BASE_URL   | Core        | URL base del nodo local                        |
+| LOCAL_NODE_BASE_URL   | Core        | URL base del Motor de Acceso                        |
 | LOCAL_NODE_API_KEY    | Core        | Key enviada en X-API-Key al nodo               |
 | LOCAL_API_KEY         | Nodo        | Key esperada en X-API-Key entrante             |
 | CORE_CALLBACK_URL     | Nodo        | URL del endpoint de eventos en el core         |

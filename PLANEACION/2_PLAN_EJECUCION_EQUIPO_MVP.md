@@ -436,38 +436,38 @@ Implementar:
 
 ## PASO 10 - Modelos del motor de acceso
 
-### local-access-node/app/models/access_user.py
+### motor-de-acceso/app/models/access_user.py
 Implementar:
 - Clase AccessUser con campos de seccion 12.1.
 - Enums: user_type, face_status, access_status, access_mode.
 - Campos clave: external_user_id, external_invitation_id, full_name, face_image_path, valid_from, valid_until, single_use, used_at.
 
-### local-access-node/app/models/device.py
+### motor-de-acceso/app/models/device.py
 Implementar:
 - Clase Device con device_code unique.
 - Enums: device_type, status.
 
-### local-access-node/app/models/access_event.py
+### motor-de-acceso/app/models/access_event.py
 Implementar:
 - Clase AccessEvent local.
 - Enums: event_type, result, reason, source.
 - Campo synced_to_core_at nullable.
 
-### local-access-node/app/models/sync_log.py
+### motor-de-acceso/app/models/sync_log.py
 Implementar:
 - Clase SyncLog.
 - Enums: operation, status.
 - request_payload y response_payload.
 
-### local-access-node/app/models/__init__.py
+### motor-de-acceso/app/models/__init__.py
 Implementar:
 - Import de todos los modelos.
 
-### local-access-node/app/commands.py
+### motor-de-acceso/app/commands.py
 Implementar:
 - flask seed para crear device gate-1 simulator online.
 
-### local-access-node/app/__init__.py
+### motor-de-acceso/app/__init__.py
 Implementar:
 - Registrar models/commands para migraciones.
 
@@ -480,36 +480,36 @@ Implementar:
 
 ## PASO 11 - APIs del motor de acceso
 
-### local-access-node/app/utils/auth.py
+### motor-de-acceso/app/utils/auth.py
 Implementar:
 - api_key_required:
   - Lee X-API-Key
   - Compara con LOCAL_API_KEY
   - Rechaza acceso si no coincide
 
-### local-access-node/app/services/face_storage_service.py
+### motor-de-acceso/app/services/face_storage_service.py
 Implementar:
 - save_face_base64(base64_text, filename_prefix):
   - Decodifica base64
   - Guarda imagen en storage/faces
   - Retorna path
 
-### local-access-node/app/services/sync_service.py
+### motor-de-acceso/app/services/sync_service.py
 Implementar:
 - log_sync(operation, status, payload, response_or_error)
 
-### local-access-node/app/services/access_decision_service.py
+### motor-de-acceso/app/services/access_decision_service.py
 Implementar:
 - evaluate_access(access_user, now, match_source, confidence):
   - Aplicar 7 reglas de negocio de seccion 15
   - Retornar {decision: grant|deny, reason: ...}
   - Si grant y single_use, marcar used_at
 
-### local-access-node/app/routes/health.py
+### motor-de-acceso/app/routes/health.py
 Implementar endpoint:
 - GET /api/v1/health (publico)
 
-### local-access-node/app/routes/access_users.py
+### motor-de-acceso/app/routes/access_users.py
 Implementar endpoints (API key):
 - POST /api/v1/access-users/upsert
   - upsert por external_user_id + external_invitation_id
@@ -520,7 +520,7 @@ Implementar endpoints (API key):
 - GET /api/v1/access-users/{external_user_id}
 - GET /api/v1/access-users?status=allowed
 
-### local-access-node/app/routes/access_check.py
+### motor-de-acceso/app/routes/access_check.py
 Implementar endpoint:
 - POST /api/v1/access/check
   - Carga usuario local
@@ -528,12 +528,12 @@ Implementar endpoint:
   - Registra access_event
   - Retorna grant/deny + reason
 
-### local-access-node/app/routes/access_events.py
+### motor-de-acceso/app/routes/access_events.py
 Implementar endpoints:
 - POST /api/v1/access-events/manual-arrival
 - GET /api/v1/access-events (filtro from/to)
 
-### local-access-node/app/__init__.py
+### motor-de-acceso/app/__init__.py
 Implementar:
 - Registrar blueprints y middleware.
 
@@ -546,13 +546,13 @@ Implementar:
 
 ## PASO 14 - Simulador del motor de acceso
 
-### local-access-node/app/routes/simulator.py
+### motor-de-acceso/app/routes/simulator.py
 Implementar:
 - GET /simulator
 - Render template screen.html
 - Inyectar API key de entorno local para pruebas
 
-### local-access-node/templates/simulator/screen.html
+### motor-de-acceso/templates/simulator/screen.html
 Implementar UI (HTML + JS vanilla):
 - Busqueda por nombre/correo
 - Tabla de usuarios locales
@@ -562,7 +562,7 @@ Implementar UI (HTML + JS vanilla):
 - Panel de resultado grande (grant/deny)
 - Historial ultimos 10 eventos del dia
 
-### local-access-node/app/__init__.py
+### motor-de-acceso/app/__init__.py
 Implementar:
 - Registrar blueprint simulator.
 
@@ -623,7 +623,7 @@ Implementar endpoint interno:
   - Guarda AccessEvent en core
   - Vincula grant/invitation cuando exista referencia
 
-### local-access-node/app/services/sync_service.py
+### motor-de-acceso/app/services/sync_service.py
 Actualizar:
 - report_event_to_core(access_event):
   - POST a CORE_CALLBACK_URL
@@ -632,11 +632,11 @@ Actualizar:
   - si ok, set synced_to_core_at
   - si falla, deja null
 
-### local-access-node/app/routes/access_check.py
+### motor-de-acceso/app/routes/access_check.py
 Actualizar:
 - Despues de registrar evento, llamar report_event_to_core sin bloquear decision.
 
-### local-access-node/app/routes/access_events.py
+### motor-de-acceso/app/routes/access_events.py
 Actualizar:
 - manual-arrival tambien reporta a core.
 
@@ -945,24 +945,24 @@ Documentar por endpoint:
 - Response exitosa.
 - Errores comunes.
 
-### docs/API_LOCAL_NODE.md
+### docs/API_MOTOR_DE_ACCESO.md
 Documentar:
 - APIs del motor de acceso + API key.
 - Ejemplos de payload.
 
-### local-access-node/docs/README.md
+### motor-de-acceso/docs/README.md
 Documentar:
 - Setup y ejecucion del motor de acceso.
 
-### local-access-node/docs/API.md
+### motor-de-acceso/docs/API.md
 Documentar:
 - Endpoints locales.
 
-### local-access-node/docs/DATA_MODEL.md
+### motor-de-acceso/docs/DATA_MODEL.md
 Documentar:
 - Modelo de datos local.
 
-### local-access-node/docs/INTEGRATION.md
+### motor-de-acceso/docs/INTEGRATION.md
 Documentar:
 - Integracion con backend core.
 - Callback y manejo de errores.

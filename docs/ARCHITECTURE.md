@@ -6,7 +6,7 @@
 
 - `frontend/` — Next.js App Router (TypeScript + Tailwind)
 - `backend/` — Flask core (PostgreSQL principal)
-- `local-access-node/` — Flask nodo local (PostgreSQL local)
+- `motor-de-acceso/` — Flask Motor de Acceso (PostgreSQL local)
 
 ## Diagrama de alto nivel
 
