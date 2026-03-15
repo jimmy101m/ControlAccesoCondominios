@@ -6,6 +6,106 @@
 
 ---
 
+## Guía rápida de delegación
+
+> Suposición de trabajo: **el PASO 1 (Estructura base) ya existe y está completado**.
+
+### Resumen ejecutivo por equipo
+
+| Equipo | Puede iniciar ya | Primer bloqueo | Pasos a cargo |
+|--------|------------------|----------------|---------------|
+| Backend principal | Sí | Después del PASO 2 | 2, 3, 4, 5, 6, 7, 8, 9 |
+| Frontend | Sí (diseno UX-UI) | Integracion real desde PASO 3 | PREPASO UX-UI, 15, 16, 17, 18, 19 |
+| Nodo Local | Sí | Después del PASO 10 | 10, 11, 14 |
+| Integración / End-to-end | No | Espera a PASO 7 y PASO 11 | 12, 13, 20, 21 |
+
+### Equipo Backend principal
+
+| Paso | Título | Puede hacerlo ya | Depende de |
+|------|--------|------------------|------------|
+| 2 | Modelos de datos del backend principal | Sí | Base ya creada |
+| 3 | Autenticación (Login + JWT + Middleware de roles) | No | 2 |
+| 4 | API de Residentes (CRUD) | No | 3 |
+| 5 | API de Invitaciones | No | 4 |
+| 6 | Registro público de visitante por link | No | 5 |
+| 7 | Confirmación del residente + Generación de Access Grant | No | 6 |
+| 8 | APIs de Guardia y Administrador (consulta operativa) | No | 3 |
+| 9 | Métricas operativas del backend | No | 8 |
+
+**Lectura rápida**
+
+- Backend puede arrancar de inmediato con el PASO 2.
+- Cuando cierre el PASO 3, habilita al equipo Frontend.
+- Los pasos 8 y 9 son backend, pero no bloquean el flujo principal de invitaciones.
+
+### Equipo Frontend
+
+#### Bloque A - Diseno (antes de codigo)
+
+| Fase | Que define | Entregable |
+|------|------------|------------|
+| A1 Arquitectura UX | Navegacion por rol y flujo publico del visitante | Mapa de pantallas y flujo |
+| A2 Wireframes | Estructura de cada pantalla y jerarquia visual | Wireframes low-fi |
+| A3 UI Kit MVP | Componentes base, colores, tipografia y estados | Biblioteca visual base |
+| A4 Prototipo | Recorrido clickeable del flujo principal | Prototipo validado |
+| A5 Handoff | Reglas por pantalla para implementar sin ambiguedad | Checklist de implementacion |
+
+#### Bloque B - Codigo (cuando ya existe base de diseno)
+
+| Paso | Título | Puede hacerlo ya | Depende de |
+|------|--------|------------------|------------|
+| 15 | Frontend — Login y autenticación | No (integrado a API real) | 3 |
+| 16 | Frontend — Dashboard del residente | No (integrado a API real) | 15 |
+| 17 | Frontend — Registro público del visitante | No (integrado a API real) | 15 |
+| 18 | Frontend — Dashboard del administrador | No (integrado a API real) | 15 |
+| 19 | Frontend — Dashboard del guardia | No (integrado a API real) | 15 |
+
+**Lectura rápida**
+
+- Frontend si puede arrancar ya en el Bloque A (diseno UX-UI).
+- Frontend integra con APIs reales en el Bloque B, a partir del PASO 3 (auth backend).
+- Una vez listo el PASO 15, los pasos 16, 17, 18 y 19 pueden repartirse por paralelo.
+
+### Equipo Nodo Local
+
+| Paso | Título | Puede hacerlo ya | Depende de |
+|------|--------|------------------|------------|
+| 10 | Modelos de datos del nodo local | Sí | Base ya creada |
+| 11 | APIs del nodo local | No | 10 |
+| 14 | Simulador local de control de acceso (UI) | No | 11 |
+
+**Lectura rápida**
+
+- Nodo Local puede arrancar de inmediato con el PASO 10.
+- Cuando cierre el PASO 11, habilita el trabajo real de Integración en el PASO 12.
+- El PASO 14 puede dejarse para después sin bloquear backend ni frontend.
+
+### Equipo Integración / End-to-end
+
+| Paso | Título | Puede hacerlo ya | Depende de |
+|------|--------|------------------|------------|
+| 12 | Servicio de sincronización Backend → Nodo Local | No | 7 y 11 |
+| 13 | Callback del nodo local al core | No | 12 |
+| 20 | Pruebas de integración end-to-end | No | 2 al 19 |
+| 21 | Documentación final | No | 2 al 20 |
+
+**Lectura rápida**
+
+- Integración no arranca todavía como implementación real.
+- Su punto de inicio técnico es cuando Backend complete el PASO 7 y Nodo Local complete el PASO 11.
+- Los pasos 20 y 21 son de cierre y requieren el sistema completo.
+
+### Orden práctico recomendado
+
+| Momento | Equipos que pueden trabajar |
+|---------|-----------------------------|
+| Ahora mismo | Backend con PASO 2 y Nodo Local con PASO 10 |
+| Después del auth backend | Backend con 4-9 y Frontend con 15 |
+| Después de backend 7 y nodo local 11 | Integración con 12 y 13 |
+| Etapa final | Integración / QA con 20 y documentación con 21 |
+
+---
+
 ## Instrucciones generales para todos los pasos
 
 1. **Antes de ejecutar un paso**, el programador debe tomar como contexto:
@@ -877,10 +977,74 @@ Usar HTML + CSS (Tailwind CDN) + JS vanilla. Incluir X-API-Key en las llamadas. 
 
 ---
 
+## PREPASO UX-UI: Estructura de diseño antes de programar frontend
+
+### Objetivo
+Definir la base de diseño UX/UI del MVP para que los pasos 15-19 se implementen con una guía clara y no "a ciegas".
+
+### Estructura de diseño (orden recomendado)
+1. **Arquitectura de información**
+   - Mapa de navegación por rol: residente, admin_local, guard.
+   - Mapa de flujo público de visitante por token.
+2. **Diseño de interacción (wireframes)**
+   - Wireframes low-fi de todas las pantallas críticas.
+   - Definición de acciones principales por pantalla.
+3. **Sistema visual base (UI kit MVP)**
+   - Tipografía, paleta, espaciado, estados de color.
+   - Componentes base: botones, inputs, cards, tablas, badges, modales, stepper.
+4. **Prototipo funcional**
+   - Flujo clickeable de punta a punta del caso principal.
+   - Validación interna de usabilidad y ajustes.
+5. **Handoff a desarrollo**
+   - Especificaciones por pantalla (campos, validaciones, estados y acciones API).
+   - Checklist de criterios de aceptación para implementación.
+
+### Pantallas mínimas a diseñar
+1. **Login**
+2. **Residente**
+   - Dashboard
+   - Crear invitación
+   - Detalle de invitación
+   - Historial de invitaciones
+3. **Visitante (pública)**
+   - Registro por token en wizard de 4 pasos
+   - Estado inválido/expirado/cancelado/usado
+4. **Admin**
+   - Dashboard
+   - Residentes
+   - Invitaciones
+   - Errores de sincronización
+   - Auditoría
+5. **Guardia**
+   - Esperados
+   - Historial
+
+### Estados UX obligatorios por pantalla
+- loading
+- empty
+- success
+- error técnico
+- sin permiso (403)
+- sesión expirada (401, cuando aplique)
+
+### Entregables formales del diseño
+1. `docs/frontend/DESIGN_BRIEF.md`
+2. `docs/frontend/USER_FLOWS.md`
+3. `docs/frontend/WIREFRAMES.md`
+4. `docs/frontend/UI_KIT.md`
+5. `docs/frontend/HANDOFF_CHECKLIST.md`
+
+### Criterio de cierre del prepaso
+- Existe una definición visual y funcional clara para cada pantalla de pasos 15-19.
+- Existe un checklist de handoff para que el equipo de código implemente sin ambiguedades.
+- Los flujos criticos estan validados: crear invitacion, registro visitante, confirmacion residente, consulta admin/guardia.
+
+---
+
 ## PASO 15: Frontend — Login y autenticación
 
 ### Contexto
-El backend principal tiene auth funcional con JWT (PASO 3). Ahora se crea la página de login en el frontend Next.js y la lógica de manejo de sesión.
+El backend principal tiene auth funcional con JWT (PASO 3) y ya existe la base de diseño definida en el **PREPASO UX-UI**. Ahora se crea la página de login en el frontend Next.js y la lógica de manejo de sesión.
 
 ### Lo que ya existe (PASO 1 + Backend completo)
 - Proyecto Next.js inicializado con App Router, TypeScript, Tailwind.
@@ -951,7 +1115,7 @@ Usar TypeScript + Tailwind. NO implementar registro, reset de password ni refres
 ## PASO 16: Frontend — Dashboard del residente
 
 ### Contexto
-El login funciona y redirige al residente a `/resident` (PASO 15). Ahora se construye el dashboard completo del residente donde puede crear invitaciones, ver su historial y gestionar visitantes pendientes.
+El login funciona y redirige al residente a `/resident` (PASO 15). Con el diseño ya definido en el **PREPASO UX-UI**, ahora se construye el dashboard completo del residente donde puede crear invitaciones, ver su historial y gestionar visitantes pendientes.
 
 ### Lo que ya existe (PASO 15 + Backend PASOS 3-7)
 - Auth en frontend con redirección por rol.
@@ -1015,7 +1179,7 @@ Componentes: StatusBadge, VisitorCard, CopyLinkButton. Usar TypeScript + Tailwin
 ## PASO 17: Frontend — Registro público del visitante
 
 ### Contexto
-El residente ya puede crear invitaciones y generar links (PASO 16). Ahora se construye la página pública que el visitante abre al recibir el link. Esta página NO requiere login y debe funcionar bien en móvil.
+El residente ya puede crear invitaciones y generar links (PASO 16). Con el diseño mobile-first definido en el **PREPASO UX-UI**, ahora se construye la página pública que el visitante abre al recibir el link. Esta página NO requiere login y debe funcionar bien en móvil.
 
 ### Lo que ya existe (PASO 16 + Backend PASO 6)
 - Backend: endpoints públicos `GET/POST /api/v1/public/invitations/{token}/...`.
@@ -1083,7 +1247,7 @@ REQUISITOS: Mobile-first, validación en frontend, manejar invitaciones expirada
 ## PASO 18: Frontend — Dashboard del administrador
 
 ### Contexto
-El dashboard del residente ya está completo (PASO 16). Ahora se construye el dashboard del administrador local que permite gestionar residentes, ver todas las invitaciones, consultar errores de sincronización y ver métricas operativas.
+El dashboard del residente ya está completo (PASO 16). Con el sistema visual definido en el **PREPASO UX-UI**, ahora se construye el dashboard del administrador local que permite gestionar residentes, ver todas las invitaciones, consultar errores de sincronización y ver métricas operativas.
 
 ### Lo que ya existe (PASO 15 + Backend PASOS 4, 8, 9)
 - Auth con rol `admin_local`.
@@ -1145,7 +1309,7 @@ Usar TypeScript + Tailwind. NO implementar gestión de condominios/unidades ni g
 ## PASO 19: Frontend — Dashboard del guardia
 
 ### Contexto
-Los dashboards de residente y admin están completos (PASOS 16, 18). Ahora se construye la interfaz del guardia, que es más simple: solo consulta accesos futuros, historial y puede marcar llegada manual.
+Los dashboards de residente y admin están completos (PASOS 16, 18). Con patrones visuales definidos en el **PREPASO UX-UI**, ahora se construye la interfaz del guardia, que es más simple: solo consulta accesos futuros, historial y puede marcar llegada manual.
 
 ### Lo que ya existe (PASO 15 + Backend PASO 8)
 - Auth con rol `guard`.
