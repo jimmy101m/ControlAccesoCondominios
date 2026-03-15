@@ -650,27 +650,99 @@ Actualizar:
 
 ## PREPASO UX-UI
 
+Objetivo del prepaso:
+- Que el equipo de diseno no trabaje "a ciegas".
+- Que cada pantalla se disene con base en recursos y funciones reales del proyecto.
+
+### Que deben disenar exactamente en Figma
+Entregable visual minimo (obligatorio):
+1. Pagina `00_INVENTARIO_FUNCIONAL` (tabla de rutas, endpoints, componentes, estados).
+2. Pagina `01_USER_FLOWS` (flujos por rol y flujo publico por token).
+3. Pagina `02_WIREFRAMES_LOFI` con estas vistas:
+  - Login.
+  - Residente: dashboard, crear invitacion, detalle invitacion, historial.
+  - Visitante publico: wizard 4 pasos y estados invalido/expirado/cancelado/usado.
+  - Admin: dashboard, residentes, invitaciones, errores de sincronizacion, auditoria.
+  - Guardia: esperados, historial.
+4. Pagina `03_UI_KIT_MVP`:
+  - Botones (primario/secundario/deshabilitado).
+  - Inputs (normal/error/deshabilitado).
+  - Cards, tabla, badge de estado, modal, stepper.
+5. Pagina `04_HIFI_MVP`:
+  - Mockups finales de las pantallas criticas del flujo principal.
+6. Pagina `05_HANDOFF`:
+  - Para cada pantalla: campos, validaciones, CTA, endpoint asociado, errores esperados.
+
+Estados que se deben disenar en cada pantalla:
+- loading
+- empty
+- success
+- error tecnico
+- 401 sesion expirada (si aplica)
+- 403 sin permiso (si aplica)
+
+### Que NO deben disenar en esta fase
+- Flujos o pantallas sin endpoint real asociado (marcar como GAP).
+- Funciones avanzadas fuera de MVP (reporteria avanzada, analitica compleja, notificaciones complejas).
+- Variantes visuales extra sin impacto funcional en MVP.
+
+### Paso 0 (obligatorio): inventario funcional en Figma
+Este paso SI es de Figma. No es para programar ni para wireframes finales todavia.
+
+Objetivo:
+- Definir con precision que se puede disenar con lo que YA existe en el proyecto.
+
+Como ejecutarlo en Figma (acciones concretas):
+1. Crear una pagina en Figma llamada `00_INVENTARIO_FUNCIONAL`.
+2. Crear 4 tablas dentro de esa pagina:
+  - `Rutas/Pantallas`: ruta, rol, objetivo de la pantalla.
+  - `Endpoints`: metodo, endpoint, payload minimo, respuesta esperada, errores esperados.
+  - `Componentes reutilizables`: nombre, uso, variante (si existe), estado (usable/no usable).
+  - `Estados UX obligatorios`: loading, empty, success, error tecnico, 401, 403.
+3. Llenar esas tablas usando solo fuentes reales:
+  - Codigo frontend (`frontend/src/components`, `frontend/src/lib`, `frontend/src/types`).
+  - Documentacion API (`docs/API_CORE.md`, `docs/API_MOTOR_DE_ACCESO.md`).
+4. Marcar con etiqueta `GAP` cualquier necesidad de diseno que no tenga soporte real en API o codigo.
+5. Pasar ese inventario a `docs/frontend/DESIGN_BRIEF.md` como seccion inicial.
+
+Regla de trabajo:
+- No disenar funciones que no existan en API/documentacion.
+- Si falta una funcion, registrarla como `GAP` en Figma y en handoff. No inventarla en UI.
+
+Criterio de cierre de Paso 0:
+- Existe pagina `00_INVENTARIO_FUNCIONAL` completa en Figma.
+- Cada pantalla minima tiene al menos un endpoint real asociado o un `GAP` declarado.
+- `docs/frontend/DESIGN_BRIEF.md` incluye el resumen del inventario.
+
 ### docs/frontend/DESIGN_BRIEF.md
-Definir:
+Debe incluir:
 - Objetivo visual y tono del producto.
 - Perfil de usuario por rol.
+- Inventario de recursos disponibles (rutas, componentes, endpoints, restricciones).
+- Alcance MVP (que entra / que no entra).
 
 ### docs/frontend/USER_FLOWS.md
-Definir:
+Debe incluir:
 - Flujo por rol: resident, admin_local, guard.
 - Flujo publico por token.
+- Para cada paso del flujo: pantalla, accion, endpoint usado y resultado esperado.
 
 ### docs/frontend/WIREFRAMES.md
-Definir:
+Debe incluir:
 - Estructura de cada pantalla minima.
+- Estados obligatorios por pantalla (loading, empty, success, error, 401/403).
+- CTA principal y CTA secundario por vista.
 
 ### docs/frontend/UI_KIT.md
-Definir:
+Debe incluir:
 - Tipografia, colores, componentes base y estados.
+- Variantes minimas: boton primario/secundario, input normal/error, badge de estado.
 
 ### docs/frontend/HANDOFF_CHECKLIST.md
-Definir:
+Debe incluir:
 - Campos, validaciones, estados, acciones API por pantalla.
+- Matriz pantalla -> endpoint -> metodo -> errores esperados.
+- Seccion de gaps detectados (si falta backend o contrato).
 
 ---
 

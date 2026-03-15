@@ -982,20 +982,61 @@ Usar HTML + CSS (Tailwind CDN) + JS vanilla. Incluir X-API-Key en las llamadas. 
 ### Objetivo
 Definir la base de diseño UX/UI del MVP para que los pasos 15-19 se implementen con una guía clara y no "a ciegas".
 
-### Estructura de diseño (orden recomendado)
-1. **Arquitectura de información**
+### Que deben disenar exactamente en Figma
+Entregable visual minimo (obligatorio):
+1. Pagina `00_INVENTARIO_FUNCIONAL` (rutas, endpoints, componentes, estados).
+2. Pagina `01_USER_FLOWS` (resident, admin_local, guard y flujo publico por token).
+3. Pagina `02_WIREFRAMES_LOFI` con estas vistas:
+   - Login.
+   - Residente: dashboard, crear invitacion, detalle invitacion, historial.
+   - Visitante publico: wizard 4 pasos y estados invalido/expirado/cancelado/usado.
+   - Admin: dashboard, residentes, invitaciones, errores de sincronizacion, auditoria.
+   - Guardia: esperados, historial.
+4. Pagina `03_UI_KIT_MVP` (botones, inputs, cards, tabla, badge, modal, stepper).
+5. Pagina `04_HIFI_MVP` (mockups finales de flujo principal).
+6. Pagina `05_HANDOFF` (campos, validaciones, CTA, endpoint, errores esperados por pantalla).
+
+Estados obligatorios por pantalla:
+- loading
+- empty
+- success
+- error tecnico
+- 401 sesion expirada (si aplica)
+- 403 sin permiso (si aplica)
+
+### Que NO deben disenar en esta fase
+- Flujos sin endpoint real asociado (registrar como GAP).
+- Funciones fuera de MVP.
+- Variantes visuales extra que no cambian comportamiento funcional.
+
+### Antes de diseñar: recursos disponibles (obligatorio)
+El equipo frontend/diseno debe arrancar con un inventario real de lo que ya existe:
+1. **Rutas y modulos frontend actuales** (por rol y flujo publico).
+2. **Componentes/utilidades reutilizables** en `frontend/src/components`, `frontend/src/lib`, `frontend/src/types`.
+3. **Endpoints reales disponibles** en `docs/API_CORE.md` y `docs/API_MOTOR_DE_ACCESO.md`.
+4. **Estados obligatorios de UI**: loading, empty, success, error tecnico, 401, 403.
+
+Regla:
+- No disenar funcionalidades que no tengan soporte en API/arquitectura.
+- Si hace falta una capacidad, registrarla como `gap` en el handoff (no inventarla en UI).
+
+### Estructura de diseño (orden recomendado y claro)
+1. **Levantamiento de inventario (paso 0)**
+   - Documentar recursos disponibles y restricciones MVP.
+   - Mapear pantalla -> endpoint para evitar ambiguedad.
+2. **Arquitectura de información**
    - Mapa de navegación por rol: residente, admin_local, guard.
    - Mapa de flujo público de visitante por token.
-2. **Diseño de interacción (wireframes)**
+3. **Diseño de interacción (wireframes)**
    - Wireframes low-fi de todas las pantallas críticas.
    - Definición de acciones principales por pantalla.
-3. **Sistema visual base (UI kit MVP)**
+4. **Sistema visual base (UI kit MVP)**
    - Tipografía, paleta, espaciado, estados de color.
    - Componentes base: botones, inputs, cards, tablas, badges, modales, stepper.
-4. **Prototipo funcional**
+5. **Prototipo funcional**
    - Flujo clickeable de punta a punta del caso principal.
    - Validación interna de usabilidad y ajustes.
-5. **Handoff a desarrollo**
+6. **Handoff a desarrollo**
    - Especificaciones por pantalla (campos, validaciones, estados y acciones API).
    - Checklist de criterios de aceptación para implementación.
 
@@ -1029,15 +1070,21 @@ Definir la base de diseño UX/UI del MVP para que los pasos 15-19 se implementen
 
 ### Entregables formales del diseño
 1. `docs/frontend/DESIGN_BRIEF.md`
+   - Debe incluir inventario de recursos existentes + alcance MVP.
 2. `docs/frontend/USER_FLOWS.md`
+   - Debe incluir flujo por rol con mapeo a endpoint real por cada accion.
 3. `docs/frontend/WIREFRAMES.md`
+   - Debe incluir estados obligatorios por pantalla y CTA principal/secundario.
 4. `docs/frontend/UI_KIT.md`
+   - Debe incluir variantes minimas de componentes base (normal/error/disabled).
 5. `docs/frontend/HANDOFF_CHECKLIST.md`
+   - Debe incluir matriz pantalla -> endpoint -> metodo -> errores esperados + gaps.
 
 ### Criterio de cierre del prepaso
 - Existe una definición visual y funcional clara para cada pantalla de pasos 15-19.
 - Existe un checklist de handoff para que el equipo de código implemente sin ambiguedades.
 - Los flujos criticos estan validados: crear invitacion, registro visitante, confirmacion residente, consulta admin/guardia.
+- Existe un inventario firmado de recursos disponibles para evitar pedir funciones inexistentes.
 
 ---
 
