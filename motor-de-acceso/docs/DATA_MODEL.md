@@ -1,4 +1,4 @@
-# Modelo de Datos — Nodo Local de Acceso
+# Modelo de Datos — Motor de Acceso de Acceso
 
 ## Tablas
 

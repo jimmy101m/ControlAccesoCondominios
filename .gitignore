@@ -48,10 +48,10 @@ pnpm-debug.log*
 # ─── Storage (imágenes y documentos subidos) ──────────────────────────────────
 backend/storage/faces/*
 backend/storage/documents/*
-local-access-node/storage/faces/*
+motor-de-acceso/storage/faces/*
 !backend/storage/faces/.gitkeep
 !backend/storage/documents/.gitkeep
-!local-access-node/storage/faces/.gitkeep
+!motor-de-acceso/storage/faces/.gitkeep
 
 # ─── IDEs y editores ──────────────────────────────────────────────────────────
 .vscode/

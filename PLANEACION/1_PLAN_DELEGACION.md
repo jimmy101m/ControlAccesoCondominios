@@ -6,6 +6,106 @@
 
 ---
 
+## Guía rápida de delegación
+
+> Suposición de trabajo: **el PASO 1 (Estructura base) ya existe y está completado**.
+
+### Resumen ejecutivo por equipo
+
+| Equipo | Puede iniciar ya | Primer bloqueo | Pasos a cargo |
+|--------|------------------|----------------|---------------|
+| Backend principal | Sí | Después del PASO 2 | 2, 3, 4, 5, 6, 7, 8, 9 |
+| Frontend | Sí (diseno UX-UI) | Integracion real desde PASO 3 | PREPASO UX-UI, 15, 16, 17, 18, 19 |
+| Motor de Acceso | Sí | Después del PASO 10 | 10, 11, 14 |
+| Integración / End-to-end | No | Espera a PASO 7 y PASO 11 | 12, 13, 20, 21 |
+
+### Equipo Backend principal
+
+| Paso | Título | Puede hacerlo ya | Depende de |
+|------|--------|------------------|------------|
+| 2 | Modelos de datos del backend principal | Sí | Base ya creada |
+| 3 | Autenticación (Login + JWT + Middleware de roles) | No | 2 |
+| 4 | API de Residentes (CRUD) | No | 3 |
+| 5 | API de Invitaciones | No | 4 |
+| 6 | Registro público de visitante por link | No | 5 |
+| 7 | Confirmación del residente + Generación de Access Grant | No | 6 |
+| 8 | APIs de Guardia y Administrador (consulta operativa) | No | 3 |
+| 9 | Métricas operativas del backend | No | 8 |
+
+**Lectura rápida**
+
+- Backend puede arrancar de inmediato con el PASO 2.
+- Cuando cierre el PASO 3, habilita al equipo Frontend.
+- Los pasos 8 y 9 son backend, pero no bloquean el flujo principal de invitaciones.
+
+### Equipo Frontend
+
+#### Bloque A - Diseno (antes de codigo)
+
+| Fase | Que define | Entregable |
+|------|------------|------------|
+| A1 Arquitectura UX | Navegacion por rol y flujo publico del visitante | Mapa de pantallas y flujo |
+| A2 Wireframes | Estructura de cada pantalla y jerarquia visual | Wireframes low-fi |
+| A3 UI Kit MVP | Componentes base, colores, tipografia y estados | Biblioteca visual base |
+| A4 Prototipo | Recorrido clickeable del flujo principal | Prototipo validado |
+| A5 Handoff | Reglas por pantalla para implementar sin ambiguedad | Checklist de implementacion |
+
+#### Bloque B - Codigo (cuando ya existe base de diseno)
+
+| Paso | Título | Puede hacerlo ya | Depende de |
+|------|--------|------------------|------------|
+| 15 | Frontend — Login y autenticación | No (integrado a API real) | 3 |
+| 16 | Frontend — Dashboard del residente | No (integrado a API real) | 15 |
+| 17 | Frontend — Registro público del visitante | No (integrado a API real) | 15 |
+| 18 | Frontend — Dashboard del administrador | No (integrado a API real) | 15 |
+| 19 | Frontend — Dashboard del guardia | No (integrado a API real) | 15 |
+
+**Lectura rápida**
+
+- Frontend si puede arrancar ya en el Bloque A (diseno UX-UI).
+- Frontend integra con APIs reales en el Bloque B, a partir del PASO 3 (auth backend).
+- Una vez listo el PASO 15, los pasos 16, 17, 18 y 19 pueden repartirse por paralelo.
+
+### Equipo Motor de Acceso
+
+| Paso | Título | Puede hacerlo ya | Depende de |
+|------|--------|------------------|------------|
+| 10 | Modelos de datos del Motor de Acceso | Sí | Base ya creada |
+| 11 | APIs del Motor de Acceso | No | 10 |
+| 14 | Simulador local de control de acceso (UI) | No | 11 |
+
+**Lectura rápida**
+
+- Motor de Acceso puede arrancar de inmediato con el PASO 10.
+- Cuando cierre el PASO 11, habilita el trabajo real de Integración en el PASO 12.
+- El PASO 14 puede dejarse para después sin bloquear backend ni frontend.
+
+### Equipo Integración / End-to-end
+
+| Paso | Título | Puede hacerlo ya | Depende de |
+|------|--------|------------------|------------|
+| 12 | Servicio de sincronización Backend → Motor de Acceso | No | 7 y 11 |
+| 13 | Callback del Motor de Acceso al core | No | 12 |
+| 20 | Pruebas de integración end-to-end | No | 2 al 19 |
+| 21 | Documentación final | No | 2 al 20 |
+
+**Lectura rápida**
+
+- Integración no arranca todavía como implementación real.
+- Su punto de inicio técnico es cuando Backend complete el PASO 7 y Motor de Acceso complete el PASO 11.
+- Los pasos 20 y 21 son de cierre y requieren el sistema completo.
+
+### Orden práctico recomendado
+
+| Momento | Equipos que pueden trabajar |
+|---------|-----------------------------|
+| Ahora mismo | Backend con PASO 2 y Motor de Acceso con PASO 10 |
+| Después del auth backend | Backend con 4-9 y Frontend con 15 |
+| Después de backend 7 y Motor de Acceso 11 | Integración con 12 y 13 |
+| Etapa final | Integración / QA con 20 y documentación con 21 |
+
+---
+
 ## Instrucciones generales para todos los pasos
 
 1. **Antes de ejecutar un paso**, el programador debe tomar como contexto:
@@ -14,7 +114,7 @@
    - Los archivos/carpetas generados por los pasos anteriores marcados como completados.
 2. **Cada paso produce entregables concretos** (archivos, carpetas, código). No se deben modificar entregables de pasos anteriores salvo que el paso actual lo indique explícitamente.
 3. **Se deben respetar las limitaciones** listadas en cada paso. Si algo no está en el alcance del paso, no debe implementarse.
-4. **Stack obligatorio**: Backend Flask + PostgreSQL, Frontend Next.js (App Router), Nodo Local Flask + PostgreSQL.
+4. **Stack obligatorio**: Backend Flask + PostgreSQL, Frontend Next.js (App Router), Motor de Acceso Flask + PostgreSQL.
 5. **Idioma del código**: inglés. Comentarios y documentación pueden ser en español.
 6. **Convenciones**: snake_case para Python, camelCase para TypeScript/JavaScript, kebab-case para rutas de URL.
 
@@ -35,8 +135,8 @@ PASO 1 (Estructura)
               └─► PASO 9 (Métricas + Auditoría Backend)
 
 PASO 1 (Estructura)
-  └─► PASO 10 (Modelos Nodo Local)
-        └─► PASO 11 (APIs Nodo Local)
+  └─► PASO 10 (Modelos Motor de Acceso)
+        └─► PASO 11 (APIs Motor de Acceso)
               └─► PASO 12 (Sync Service Backend→Nodo)
                     └─► PASO 13 (Callback Nodo→Core)
                           └─► PASO 14 (Simulador Local UI)
@@ -61,7 +161,7 @@ PASO 21 (Documentación final)
 ## PASO 1: Estructura del proyecto y configuración inicial
 
 ### Contexto
-Este es el primer paso del MVP. No existe código previo. Se debe crear la estructura de carpetas y archivos base para los tres componentes del sistema: `backend/`, `frontend/`, `local-access-node/`. El objetivo es que cada componente sea ejecutable de forma independiente desde el inicio.
+Este es el primer paso del MVP. No existe código previo. Se debe crear la estructura de carpetas y archivos base para los tres componentes del sistema: `backend/`, `frontend/`, `motor-de-acceso/`. El objetivo es que cada componente sea ejecutable de forma independiente desde el inicio.
 
 ### Qué debe implementar el programador
 1. Crear la estructura de carpetas completa según la sección 10 de `proyectoBASE.md`.
@@ -80,7 +180,7 @@ Este es el primer paso del MVP. No existe código previo. Se debe crear la estru
    - Crear `.env.local.example` con `NEXT_PUBLIC_API_URL=http://localhost:5000/api/v1`.
    - Crear `src/lib/api.ts` con cliente HTTP base (fetch wrapper con base URL configurable).
    - Crear `src/types/index.ts` con interfaces TypeScript para: User, Role, Invitation, Visitor, AccessGrant (basadas en sección 11 de `proyectoBASE.md`).
-4. **Nodo Local (`local-access-node/`)**:
+4. **Motor de Acceso (`motor-de-acceso/`)**:
    - Crear `requirements.txt` con dependencias: Flask, Flask-SQLAlchemy, Flask-Migrate, Flask-CORS, psycopg2-binary, python-dotenv, requests.
    - Crear `run.py` con punto de entrada.
    - Crear `app/__init__.py` con factory `create_app()`.
@@ -92,13 +192,13 @@ Este es el primer paso del MVP. No existe código previo. Se debe crear la estru
    - Crear `templates/simulator/` vacío.
    - Crear carpeta `docs/` con archivos placeholder: `README.md`, `API.md`, `DATA_MODEL.md`, `INTEGRATION.md`.
 5. **Raíz del proyecto**:
-   - Crear `docs/` con archivos placeholder: `README.md`, `MVP.md`, `ARCHITECTURE.md`, `API_CORE.md`, `API_LOCAL_NODE.md`, `ROADMAP.md`.
+   - Crear `docs/` con archivos placeholder: `README.md`, `MVP.md`, `ARCHITECTURE.md`, `API_CORE.md`, `API_MOTOR_DE_ACCESO.md`, `ROADMAP.md`.
    - Crear `.gitignore` apropiado para Python + Node.js + archivos de entorno.
    - Crear `README.md` raíz con descripción breve del proyecto y cómo correr cada componente.
 
 ### Entregables
 - Toda la estructura de carpetas creada.
-- Los tres componentes arrancables (aunque sin funcionalidad): `python run.py` en backend y nodo local, `npm run dev` en frontend.
+- Los tres componentes arrancables (aunque sin funcionalidad): `python run.py` en backend y Motor de Acceso, `npm run dev` en frontend.
 - Archivos `.env.example` en cada componente.
 
 ### Limitaciones
@@ -115,7 +215,7 @@ Objetivo: crear la estructura inicial completa del proyecto "Control de Acceso C
 El proyecto tiene tres componentes:
 1. backend/ — Flask + PostgreSQL
 2. frontend/ — Next.js con App Router + TypeScript + Tailwind
-3. local-access-node/ — Flask + PostgreSQL
+3. motor-de-acceso/ — Flask + PostgreSQL
 
 Crear TODA la estructura de carpetas y archivos base. Cada componente debe poder arrancarse de forma independiente, aunque sin funcionalidad aún. Incluir archivos de configuración, .env.example, .gitignore y un README raíz.
 
@@ -437,7 +537,7 @@ Seguridad: validar tipo MIME, usar secure_filename, generar nombres UUID, no exp
 ## PASO 7: Confirmación del residente + Generación de Access Grant
 
 ### Contexto
-El visitante ya puede registrarse (PASO 6). Ahora el residente debe poder confirmar que acepta al visitante registrado. Al confirmar, el sistema genera un `AccessGrant` que representa el permiso de acceso concreto. Este permiso será después sincronizado al nodo local.
+El visitante ya puede registrarse (PASO 6). Ahora el residente debe poder confirmar que acepta al visitante registrado. Al confirmar, el sistema genera un `AccessGrant` que representa el permiso de acceso concreto. Este permiso será después sincronizado al Motor de Acceso.
 
 ### Lo que ya existe (PASOS 1-6)
 - Flujo completo: crear invitación → visitante se registra con datos/selfie/documento.
@@ -464,7 +564,7 @@ El visitante ya puede registrarse (PASO 6). Ahora el residente debe poder confir
 - Cancelación actualizada para revocar grants.
 
 ### Limitaciones
-- NO implementar la sincronización al nodo local (eso es PASO 12).
+- NO implementar la sincronización al Motor de Acceso (eso es PASO 12).
 - El AccessGrant se crea con status `pending_sync`; la sincronización lo cambiará a `active` después.
 - NO implementar notificaciones al visitante (email/SMS/push).
 - Solo el residente dueño puede confirmar.
@@ -482,7 +582,7 @@ Implementa:
 3. Servicio audit_service.py: log_action para auditoría
 4. Actualizar cancelación para revocar grants existentes
 
-AccessGrant se crea con status=pending_sync, valid_from=now, valid_until=expires_at, single_use=true. NO implementar sincronización al nodo local ni notificaciones.
+AccessGrant se crea con status=pending_sync, valid_from=now, valid_until=expires_at, single_use=true. NO implementar sincronización al Motor de Acceso ni notificaciones.
 ```
 
 ---
@@ -589,47 +689,47 @@ Usar queries agregadas eficientes (COUNT, GROUP BY). Filtros opcionales por fech
 
 ---
 
-# FASE 3 — NODO LOCAL DE ACCESO
+# FASE 3 — Motor de Acceso DE ACCESO
 
 ---
 
-## PASO 10: Modelos de datos del nodo local
+## PASO 10: Modelos de datos del Motor de Acceso
 
 ### Contexto
-La estructura del nodo local ya existe (PASO 1). Ahora se crean los modelos SQLAlchemy según la sección 12 de `proyectoBASE.md`. El nodo local es un servicio independiente con su propia base de datos PostgreSQL.
+La estructura del Motor de Acceso ya existe (PASO 1). Ahora se crean los modelos SQLAlchemy según la sección 12 de `proyectoBASE.md`. El Motor de Acceso es un servicio independiente con su propia base de datos PostgreSQL.
 
 ### Lo que ya existe (PASO 1)
-- Estructura de carpetas `local-access-node/`.
+- Estructura de carpetas `motor-de-acceso/`.
 - `app/__init__.py`, `config.py`, `extensions.py`.
 - `requirements.txt`.
 
 ### Qué debe implementar el programador
-1. Crear modelos en `local-access-node/app/models/`:
+1. Crear modelos en `motor-de-acceso/app/models/`:
    - `access_user.py` — Modelo `AccessUser` con TODOS los campos de sección 12.1. Enums para: `user_type` (resident, visitor), `face_status` (enrolled, missing, invalid), `access_status` (allowed, blocked, expired, used), `access_mode` (pedestrian, vehicle).
    - `device.py` — Modelo `Device` con campos de sección 12.2. Enums para `device_type` y `status`.
    - `access_event.py` — Modelo `AccessEvent` con campos de sección 12.3. Enums para `event_type`, `result`, `reason`, `source`.
    - `sync_log.py` — Modelo `SyncLog` con campos de sección 12.4. Enums para `operation` y `status`.
 2. Crear `__init__.py` con imports.
-3. Configurar Flask-Migrate para el nodo local.
+3. Configurar Flask-Migrate para el Motor de Acceso.
 4. Crear migración inicial.
 5. Crear comando seed que inserte un device simulador: `device_code="gate-1"`, `device_type="simulator"`, `status="online"`.
 
 ### Entregables
-- Todos los modelos en `local-access-node/app/models/`.
+- Todos los modelos en `motor-de-acceso/app/models/`.
 - Migración inicial.
 - Comando seed para device simulador.
 
 ### Limitaciones
 - NO crear rutas ni servicios.
 - NO conectar con el backend principal.
-- El nodo local usa su PROPIA base de datos PostgreSQL (diferente del backend principal).
+- El Motor de Acceso usa su PROPIA base de datos PostgreSQL (diferente del backend principal).
 - Los campos deben coincidir EXACTAMENTE con la sección 12.
 
 ### Resumen de implementación para el programador
 ```
-Objetivo: crear los modelos SQLAlchemy del nodo local de acceso.
+Objetivo: crear los modelos SQLAlchemy del Motor de Acceso de acceso.
 
-CONTEXTO: El nodo local es un servicio Flask independiente con su propia base PostgreSQL. Los modelos representan usuarios autorizados localmente, dispositivos, eventos de acceso y logs de sincronización.
+CONTEXTO: El Motor de Acceso es un servicio Flask independiente con su propia base PostgreSQL. Los modelos representan usuarios autorizados localmente, dispositivos, eventos de acceso y logs de sincronización.
 
 Modelos según sección 12 de la especificación:
 1. AccessUser — espejo mínimo de personas autorizadas
@@ -642,38 +742,38 @@ Incluir enums para todos los campos con valores fijos, migración inicial y seed
 
 ---
 
-## PASO 11: APIs del nodo local
+## PASO 11: APIs del Motor de Acceso
 
 ### Contexto
-Los modelos del nodo local ya existen (PASO 10). Ahora se implementan TODAS las APIs del nodo local según la sección 14 de `proyectoBASE.md`. Estas APIs son llamadas por el backend principal y por el simulador local.
+Los modelos del Motor de Acceso ya existen (PASO 10). Ahora se implementan TODAS las APIs del Motor de Acceso según la sección 14 de `proyectoBASE.md`. Estas APIs son llamadas por el backend principal y por el simulador local.
 
 ### Lo que ya existe (PASOS 1, 10)
 - Modelos: AccessUser, Device, AccessEvent, SyncLog.
-- Configuración del nodo local con API_KEY.
+- Configuración del Motor de Acceso con API_KEY.
 
 ### Qué debe implementar el programador
 1. Crear middleware de autenticación por API Key:
-   - `local-access-node/app/utils/auth.py` — Decorador `api_key_required` que valida el header `X-API-Key` contra la variable `LOCAL_API_KEY`.
-2. Crear `local-access-node/app/routes/health.py`:
+   - `motor-de-acceso/app/utils/auth.py` — Decorador `api_key_required` que valida el header `X-API-Key` contra la variable `LOCAL_API_KEY`.
+2. Crear `motor-de-acceso/app/routes/health.py`:
    - `GET /api/v1/health` — Público. Retorna status, service name, version.
-3. Crear `local-access-node/app/routes/access_users.py`:
+3. Crear `motor-de-acceso/app/routes/access_users.py`:
    - `POST /api/v1/access-users/upsert` — Protegido con API Key. Body según sección 14.2. Si el usuario existe (por external_user_id + external_invitation_id), actualiza; si no, crea. Si incluye `face_image_base64`, decodifica y guarda en `storage/faces/`. Registra en sync_logs.
    - `POST /api/v1/access-users/revoke` — Protegido con API Key. Body según sección 14.3. Cambia access_status a `blocked`.
    - `GET /api/v1/access-users/{external_user_id}` — Protegido con API Key. Retorna datos del usuario.
    - `GET /api/v1/access-users?status=allowed` — Protegido con API Key. Lista usuarios filtrados por status.
-4. Crear `local-access-node/app/routes/access_check.py`:
+4. Crear `motor-de-acceso/app/routes/access_check.py`:
    - `POST /api/v1/access/check` — Protegido con API Key. Body según sección 14.7. Implementa las 7 reglas de negocio de la sección 15. Retorna `grant` o `deny` con razón. Si es grant y single_use, marca `used_at`. Crea AccessEvent.
-5. Crear `local-access-node/app/routes/access_events.py`:
+5. Crear `motor-de-acceso/app/routes/access_events.py`:
    - `POST /api/v1/access-events/manual-arrival` — Protegido con API Key. Body según sección 14.6. Crea evento de tipo `manual_arrival`.
    - `GET /api/v1/access-events` — Protegido con API Key. Historial con filtros `from` y `to`.
 6. Crear servicios:
-   - `local-access-node/app/services/access_decision_service.py` — Implementa las 7 reglas de la sección 15.
-   - `local-access-node/app/services/face_storage_service.py` — Decodifica base64, guarda imagen, retorna path.
-   - `local-access-node/app/services/sync_service.py` — Registra operaciones en sync_logs.
+   - `motor-de-acceso/app/services/access_decision_service.py` — Implementa las 7 reglas de la sección 15.
+   - `motor-de-acceso/app/services/face_storage_service.py` — Decodifica base64, guarda imagen, retorna path.
+   - `motor-de-acceso/app/services/sync_service.py` — Registra operaciones en sync_logs.
 7. Registrar todos los blueprints.
 
 ### Entregables
-- Todas las rutas del nodo local funcionales.
+- Todas las rutas del Motor de Acceso funcionales.
 - Servicios de decisión, almacenamiento facial y sync.
 - Middleware de API Key.
 
@@ -681,15 +781,15 @@ Los modelos del nodo local ya existen (PASO 10). Ahora se implementan TODAS las 
 - NO implementar el callback al core (eso es PASO 13).
 - NO implementar el simulador UI (eso es PASO 14).
 - La autenticación es por API Key, NO por JWT.
-- El nodo local NO accede a la base de datos del backend principal.
+- El Motor de Acceso NO accede a la base de datos del backend principal.
 - Las 7 reglas de negocio de la sección 15 deben implementarse EXACTAMENTE.
 - `face_image_base64` en el upsert debe decodificarse y guardarse como archivo, no almacenarse en la DB como base64.
 
 ### Resumen de implementación para el programador
 ```
-Objetivo: implementar TODAS las APIs del nodo local de acceso.
+Objetivo: implementar TODAS las APIs del Motor de Acceso de acceso.
 
-CONTEXTO: El nodo local es un servicio Flask independiente. Sus modelos ya existen. Se comunica con el backend principal mediante API Key (header X-API-Key).
+CONTEXTO: El Motor de Acceso es un servicio Flask independiente. Sus modelos ya existen. Se comunica con el backend principal mediante API Key (header X-API-Key).
 
 APIs a implementar (sección 14 de la especificación):
 1. GET /api/v1/health — público
@@ -706,19 +806,19 @@ Todas protegidas con API Key excepto health. Implementar servicios de decisión,
 
 ---
 
-## PASO 12: Servicio de sincronización Backend → Nodo Local
+## PASO 12: Servicio de sincronización Backend → Motor de Acceso
 
 ### Contexto
-Tanto el backend principal (PASOS 1-9) como el nodo local (PASOS 10-11) ya funcionan de forma independiente. Ahora se conectan: cuando el backend genera un AccessGrant (tras confirmación del residente), debe sincronizarlo al nodo local. Cuando se revoca, debe notificar la revocación.
+Tanto el backend principal (PASOS 1-9) como el Motor de Acceso (PASOS 10-11) ya funcionan de forma independiente. Ahora se conectan: cuando el backend genera un AccessGrant (tras confirmación del residente), debe sincronizarlo al Motor de Acceso. Cuando se revoca, debe notificar la revocación.
 
 ### Lo que ya existe (PASOS 1-11)
 - Backend: AccessGrant con status `pending_sync`.
-- Nodo local: `POST /api/v1/access-users/upsert` y `POST /api/v1/access-users/revoke`.
+- Motor de Acceso: `POST /api/v1/access-users/upsert` y `POST /api/v1/access-users/revoke`.
 - Configuración: `LOCAL_NODE_BASE_URL` y `LOCAL_NODE_API_KEY` en env del backend.
 
 ### Qué debe implementar el programador
 1. Crear `backend/app/services/access_sync_service.py`:
-   - `sync_grant_to_local_node(access_grant_id)` — Toma un grant con status `pending_sync`, construye el payload para el endpoint `/api/v1/access-users/upsert` del nodo local (incluyendo face_image_base64 si hay selfie), envía la petición HTTP, actualiza status a `active` si exitoso o `sync_error` si falla. Registra en audit_log.
+   - `sync_grant_to_local_node(access_grant_id)` — Toma un grant con status `pending_sync`, construye el payload para el endpoint `/api/v1/access-users/upsert` del Motor de Acceso (incluyendo face_image_base64 si hay selfie), envía la petición HTTP, actualiza status a `active` si exitoso o `sync_error` si falla. Registra en audit_log.
    - `revoke_grant_on_local_node(access_grant_id)` — Envía petición a `/api/v1/access-users/revoke`. Actualiza status del grant a `revoked`.
    - `_build_upsert_payload(grant, invitation, visitor)` — Helper privado que arma el payload.
    - `_read_face_image_as_base64(face_image_path)` — Lee la selfie del visitor y la convierte a base64.
@@ -729,7 +829,7 @@ Tanto el backend principal (PASOS 1-9) como el nodo local (PASOS 10-11) ya funci
    - `POST /api/v1/admin/access-grants/{grantId}/retry-sync` — Solo `admin_local`. Reintenta sincronización de un grant con status `sync_error`.
 4. Manejar errores de red:
    - Timeout de 10 segundos en las peticiones HTTP.
-   - Si el nodo local no responde, status = `sync_error`.
+   - Si el Motor de Acceso no responde, status = `sync_error`.
    - Reportar el error en audit_log con detalle.
 
 ### Entregables
@@ -747,9 +847,9 @@ Tanto el backend principal (PASOS 1-9) como el nodo local (PASOS 10-11) ya funci
 
 ### Resumen de implementación para el programador
 ```
-Objetivo: implementar el servicio de sincronización entre el backend principal y el nodo local.
+Objetivo: implementar el servicio de sincronización entre el backend principal y el Motor de Acceso.
 
-CONTEXTO: El backend crea AccessGrants con status pending_sync. El nodo local tiene POST /api/v1/access-users/upsert y POST /api/v1/access-users/revoke protegidos por API Key.
+CONTEXTO: El backend crea AccessGrants con status pending_sync. El Motor de Acceso tiene POST /api/v1/access-users/upsert y POST /api/v1/access-users/revoke protegidos por API Key.
 
 Implementa:
 1. access_sync_service.py: sync_grant_to_local_node, revoke_grant_on_local_node
@@ -757,28 +857,28 @@ Implementa:
 3. Integrar revocación en cancelación de invitación
 4. POST /api/v1/admin/access-grants/{grantId}/retry-sync — reintento manual
 
-La sincronización envía los datos del visitante + selfie como base64 al nodo local. Si falla: grant queda en sync_error, confirmación NO se revierte. Timeout 10s. NO implementar colas ni reintentos automáticos.
+La sincronización envía los datos del visitante + selfie como base64 al Motor de Acceso. Si falla: grant queda en sync_error, confirmación NO se revierte. Timeout 10s. NO implementar colas ni reintentos automáticos.
 ```
 
 ---
 
-## PASO 13: Callback del nodo local al core
+## PASO 13: Callback del Motor de Acceso al core
 
 ### Contexto
-El nodo local ya puede decidir accesos (PASO 11) y recibe permisos del backend (PASO 12). Ahora falta el camino inverso: cuando ocurre un evento de acceso en el nodo local (grant, deny, manual_arrival), debe reportarlo al backend principal para mantener la bitácora centralizada.
+El Motor de Acceso ya puede decidir accesos (PASO 11) y recibe permisos del backend (PASO 12). Ahora falta el camino inverso: cuando ocurre un evento de acceso en el Motor de Acceso (grant, deny, manual_arrival), debe reportarlo al backend principal para mantener la bitácora centralizada.
 
 ### Lo que ya existe (PASOS 1-12)
-- Nodo local: AccessEvents creándose con cada decisión.
+- Motor de Acceso: AccessEvents creándose con cada decisión.
 - Backend: config `CORE_CALLBACK_URL` y `CORE_CALLBACK_API_KEY`.
 
 ### Qué debe implementar el programador
 1. **En el backend principal**, crear `backend/app/routes/access.py`:
-   - `POST /internal/v1/local-access/events` — Protegido con API Key (distinto de JWT). Recibe payload del nodo local según sección 14.9. Crea registro en `access_events` del core. Vincula con access_grant si corresponde.
+   - `POST /internal/v1/local-access/events` — Protegido con API Key (distinto de JWT). Recibe payload del Motor de Acceso según sección 14.9. Crea registro en `access_events` del core. Vincula con access_grant si corresponde.
 2. Crear middleware en backend para validar API Key interna:
    - `backend/app/utils/internal_auth.py` — Decorador `internal_api_key_required` que valida header `X-API-Key` contra `LOCAL_NODE_API_KEY`.
-3. **En el nodo local**, actualizar `local-access-node/app/services/sync_service.py`:
+3. **En el Motor de Acceso**, actualizar `motor-de-acceso/app/services/sync_service.py`:
    - `report_event_to_core(access_event)` — Envía el evento al core vía HTTP POST. Actualiza `synced_to_core_at` en el evento local si exitoso.
-4. Integrar en el flujo del nodo local:
+4. Integrar en el flujo del Motor de Acceso:
    - Después de cada decisión de acceso (`access/check`), llamar a `report_event_to_core()`.
    - Después de cada `manual-arrival`, llamar a `report_event_to_core()`.
 5. Si la comunicación al core falla, el evento queda registrado localmente con `synced_to_core_at = null`. No se pierde.
@@ -786,7 +886,7 @@ El nodo local ya puede decidir accesos (PASO 11) y recibe permisos del backend (
 ### Entregables
 - Endpoint `POST /internal/v1/local-access/events` en el backend.
 - `internal_auth.py` con decorador de API Key interna.
-- Actualización del sync_service del nodo local con callback.
+- Actualización del sync_service del Motor de Acceso con callback.
 - Integración automática de callback tras cada evento.
 
 ### Limitaciones
@@ -797,14 +897,14 @@ El nodo local ya puede decidir accesos (PASO 11) y recibe permisos del backend (
 
 ### Resumen de implementación para el programador
 ```
-Objetivo: implementar el callback del nodo local al backend principal.
+Objetivo: implementar el callback del Motor de Acceso al backend principal.
 
-CONTEXTO: El nodo local genera eventos de acceso. Debe reportarlos al core para bitácora centralizada.
+CONTEXTO: El Motor de Acceso genera eventos de acceso. Debe reportarlos al core para bitácora centralizada.
 
 Implementa:
-1. POST /internal/v1/local-access/events en el backend — recibe eventos del nodo local, protegido con API Key interna
+1. POST /internal/v1/local-access/events en el backend — recibe eventos del Motor de Acceso, protegido con API Key interna
 2. Decorador internal_api_key_required en el backend
-3. Función report_event_to_core() en el sync_service del nodo local
+3. Función report_event_to_core() en el sync_service del Motor de Acceso
 4. Llamar a report_event_to_core después de cada access/check y manual-arrival
 
 Si el core no responde, el evento queda local (synced_to_core_at=null). NO implementar reintentos automáticos.
@@ -815,17 +915,17 @@ Si el core no responde, el evento queda local (synced_to_core_at=null). NO imple
 ## PASO 14: Simulador local de control de acceso (UI)
 
 ### Contexto
-El nodo local está completamente funcional (PASOS 10-13). Ahora se crea la interfaz web del simulador que permite probar el flujo de acceso sin hardware real, según la sección 16 de `proyectoBASE.md`.
+El Motor de Acceso está completamente funcional (PASOS 10-13). Ahora se crea la interfaz web del simulador que permite probar el flujo de acceso sin hardware real, según la sección 16 de `proyectoBASE.md`.
 
 ### Lo que ya existe (PASOS 10-13)
-- Nodo local: todas las APIs incluyendo `/api/v1/access/check`, access_users, access_events.
+- Motor de Acceso: todas las APIs incluyendo `/api/v1/access/check`, access_users, access_events.
 - Device simulador "gate-1" creado por seed.
 - Carpeta `templates/simulator/`.
 
 ### Qué debe implementar el programador
-1. Crear `local-access-node/app/routes/simulator.py`:
+1. Crear `motor-de-acceso/app/routes/simulator.py`:
    - `GET /simulator` — Renderiza la página HTML del simulador.
-2. Crear `local-access-node/templates/simulator/screen.html`:
+2. Crear `motor-de-acceso/templates/simulator/screen.html`:
    - Página HTML autónoma con CSS inline o mínimo (puede usar Tailwind CDN).
    - **Funcionalidades**:
      - Campo de búsqueda para buscar usuario por nombre o correo (llama a GET `/api/v1/access-users`).
@@ -854,9 +954,9 @@ El nodo local está completamente funcional (PASOS 10-13). Ahora se crea la inte
 
 ### Resumen de implementación para el programador
 ```
-Objetivo: crear el simulador web de control de acceso para el nodo local.
+Objetivo: crear el simulador web de control de acceso para el Motor de Acceso.
 
-CONTEXTO: El nodo local tiene todas las APIs funcionales. Necesitas crear una página HTML que permita probar el flujo de acceso.
+CONTEXTO: El Motor de Acceso tiene todas las APIs funcionales. Necesitas crear una página HTML que permita probar el flujo de acceso.
 
 Crea:
 1. GET /simulator — ruta Flask que renderiza el template
@@ -877,10 +977,121 @@ Usar HTML + CSS (Tailwind CDN) + JS vanilla. Incluir X-API-Key en las llamadas. 
 
 ---
 
+## PREPASO UX-UI: Estructura de diseño antes de programar frontend
+
+### Objetivo
+Definir la base de diseño UX/UI del MVP para que los pasos 15-19 se implementen con una guía clara y no "a ciegas".
+
+### Que deben disenar exactamente en Figma
+Entregable visual minimo (obligatorio):
+1. Pagina `00_INVENTARIO_FUNCIONAL` (rutas, endpoints, componentes, estados).
+2. Pagina `01_USER_FLOWS` (resident, admin_local, guard y flujo publico por token).
+3. Pagina `02_WIREFRAMES_LOFI` con estas vistas:
+   - Login.
+   - Residente: dashboard, crear invitacion, detalle invitacion, historial.
+   - Visitante publico: wizard 4 pasos y estados invalido/expirado/cancelado/usado.
+   - Admin: dashboard, residentes, invitaciones, errores de sincronizacion, auditoria.
+   - Guardia: esperados, historial.
+4. Pagina `03_UI_KIT_MVP` (botones, inputs, cards, tabla, badge, modal, stepper).
+5. Pagina `04_HIFI_MVP` (mockups finales de flujo principal).
+6. Pagina `05_HANDOFF` (campos, validaciones, CTA, endpoint, errores esperados por pantalla).
+
+Estados obligatorios por pantalla:
+- loading
+- empty
+- success
+- error tecnico
+- 401 sesion expirada (si aplica)
+- 403 sin permiso (si aplica)
+
+### Que NO deben disenar en esta fase
+- Flujos sin endpoint real asociado (registrar como GAP).
+- Funciones fuera de MVP.
+- Variantes visuales extra que no cambian comportamiento funcional.
+
+### Antes de diseñar: recursos disponibles (obligatorio)
+El equipo frontend/diseno debe arrancar con un inventario real de lo que ya existe:
+1. **Rutas y modulos frontend actuales** (por rol y flujo publico).
+2. **Componentes/utilidades reutilizables** en `frontend/src/components`, `frontend/src/lib`, `frontend/src/types`.
+3. **Endpoints reales disponibles** en `docs/API_CORE.md` y `docs/API_MOTOR_DE_ACCESO.md`.
+4. **Estados obligatorios de UI**: loading, empty, success, error tecnico, 401, 403.
+
+Regla:
+- No disenar funcionalidades que no tengan soporte en API/arquitectura.
+- Si hace falta una capacidad, registrarla como `gap` en el handoff (no inventarla en UI).
+
+### Estructura de diseño (orden recomendado y claro)
+1. **Levantamiento de inventario (paso 0)**
+   - Documentar recursos disponibles y restricciones MVP.
+   - Mapear pantalla -> endpoint para evitar ambiguedad.
+2. **Arquitectura de información**
+   - Mapa de navegación por rol: residente, admin_local, guard.
+   - Mapa de flujo público de visitante por token.
+3. **Diseño de interacción (wireframes)**
+   - Wireframes low-fi de todas las pantallas críticas.
+   - Definición de acciones principales por pantalla.
+4. **Sistema visual base (UI kit MVP)**
+   - Tipografía, paleta, espaciado, estados de color.
+   - Componentes base: botones, inputs, cards, tablas, badges, modales, stepper.
+5. **Prototipo funcional**
+   - Flujo clickeable de punta a punta del caso principal.
+   - Validación interna de usabilidad y ajustes.
+6. **Handoff a desarrollo**
+   - Especificaciones por pantalla (campos, validaciones, estados y acciones API).
+   - Checklist de criterios de aceptación para implementación.
+
+### Pantallas mínimas a diseñar
+1. **Login**
+2. **Residente**
+   - Dashboard
+   - Crear invitación
+   - Detalle de invitación
+   - Historial de invitaciones
+3. **Visitante (pública)**
+   - Registro por token en wizard de 4 pasos
+   - Estado inválido/expirado/cancelado/usado
+4. **Admin**
+   - Dashboard
+   - Residentes
+   - Invitaciones
+   - Errores de sincronización
+   - Auditoría
+5. **Guardia**
+   - Esperados
+   - Historial
+
+### Estados UX obligatorios por pantalla
+- loading
+- empty
+- success
+- error técnico
+- sin permiso (403)
+- sesión expirada (401, cuando aplique)
+
+### Entregables formales del diseño
+1. `docs/frontend/DESIGN_BRIEF.md`
+   - Debe incluir inventario de recursos existentes + alcance MVP.
+2. `docs/frontend/USER_FLOWS.md`
+   - Debe incluir flujo por rol con mapeo a endpoint real por cada accion.
+3. `docs/frontend/WIREFRAMES.md`
+   - Debe incluir estados obligatorios por pantalla y CTA principal/secundario.
+4. `docs/frontend/UI_KIT.md`
+   - Debe incluir variantes minimas de componentes base (normal/error/disabled).
+5. `docs/frontend/HANDOFF_CHECKLIST.md`
+   - Debe incluir matriz pantalla -> endpoint -> metodo -> errores esperados + gaps.
+
+### Criterio de cierre del prepaso
+- Existe una definición visual y funcional clara para cada pantalla de pasos 15-19.
+- Existe un checklist de handoff para que el equipo de código implemente sin ambiguedades.
+- Los flujos criticos estan validados: crear invitacion, registro visitante, confirmacion residente, consulta admin/guardia.
+- Existe un inventario firmado de recursos disponibles para evitar pedir funciones inexistentes.
+
+---
+
 ## PASO 15: Frontend — Login y autenticación
 
 ### Contexto
-El backend principal tiene auth funcional con JWT (PASO 3). Ahora se crea la página de login en el frontend Next.js y la lógica de manejo de sesión.
+El backend principal tiene auth funcional con JWT (PASO 3) y ya existe la base de diseño definida en el **PREPASO UX-UI**. Ahora se crea la página de login en el frontend Next.js y la lógica de manejo de sesión.
 
 ### Lo que ya existe (PASO 1 + Backend completo)
 - Proyecto Next.js inicializado con App Router, TypeScript, Tailwind.
@@ -951,7 +1162,7 @@ Usar TypeScript + Tailwind. NO implementar registro, reset de password ni refres
 ## PASO 16: Frontend — Dashboard del residente
 
 ### Contexto
-El login funciona y redirige al residente a `/resident` (PASO 15). Ahora se construye el dashboard completo del residente donde puede crear invitaciones, ver su historial y gestionar visitantes pendientes.
+El login funciona y redirige al residente a `/resident` (PASO 15). Con el diseño ya definido en el **PREPASO UX-UI**, ahora se construye el dashboard completo del residente donde puede crear invitaciones, ver su historial y gestionar visitantes pendientes.
 
 ### Lo que ya existe (PASO 15 + Backend PASOS 3-7)
 - Auth en frontend con redirección por rol.
@@ -991,7 +1202,7 @@ El login funciona y redirige al residente a `/resident` (PASO 15). Ahora se cons
 ### Limitaciones
 - NO implementar notificaciones push ni en tiempo real.
 - NO implementar edición de invitaciones (solo crear y cancelar).
-- NO mostrar información del nodo local al residente.
+- NO mostrar información del Motor de Acceso al residente.
 - El residente solo ve SUS invitaciones.
 - Diseño responsive con Tailwind pero no necesita ser perfecto visualmente.
 
@@ -1015,7 +1226,7 @@ Componentes: StatusBadge, VisitorCard, CopyLinkButton. Usar TypeScript + Tailwin
 ## PASO 17: Frontend — Registro público del visitante
 
 ### Contexto
-El residente ya puede crear invitaciones y generar links (PASO 16). Ahora se construye la página pública que el visitante abre al recibir el link. Esta página NO requiere login y debe funcionar bien en móvil.
+El residente ya puede crear invitaciones y generar links (PASO 16). Con el diseño mobile-first definido en el **PREPASO UX-UI**, ahora se construye la página pública que el visitante abre al recibir el link. Esta página NO requiere login y debe funcionar bien en móvil.
 
 ### Lo que ya existe (PASO 16 + Backend PASO 6)
 - Backend: endpoints públicos `GET/POST /api/v1/public/invitations/{token}/...`.
@@ -1083,7 +1294,7 @@ REQUISITOS: Mobile-first, validación en frontend, manejar invitaciones expirada
 ## PASO 18: Frontend — Dashboard del administrador
 
 ### Contexto
-El dashboard del residente ya está completo (PASO 16). Ahora se construye el dashboard del administrador local que permite gestionar residentes, ver todas las invitaciones, consultar errores de sincronización y ver métricas operativas.
+El dashboard del residente ya está completo (PASO 16). Con el sistema visual definido en el **PREPASO UX-UI**, ahora se construye el dashboard del administrador local que permite gestionar residentes, ver todas las invitaciones, consultar errores de sincronización y ver métricas operativas.
 
 ### Lo que ya existe (PASO 15 + Backend PASOS 4, 8, 9)
 - Auth con rol `admin_local`.
@@ -1145,7 +1356,7 @@ Usar TypeScript + Tailwind. NO implementar gestión de condominios/unidades ni g
 ## PASO 19: Frontend — Dashboard del guardia
 
 ### Contexto
-Los dashboards de residente y admin están completos (PASOS 16, 18). Ahora se construye la interfaz del guardia, que es más simple: solo consulta accesos futuros, historial y puede marcar llegada manual.
+Los dashboards de residente y admin están completos (PASOS 16, 18). Con patrones visuales definidos en el **PREPASO UX-UI**, ahora se construye la interfaz del guardia, que es más simple: solo consulta accesos futuros, historial y puede marcar llegada manual.
 
 ### Lo que ya existe (PASO 15 + Backend PASO 8)
 - Auth con rol `guard`.
@@ -1173,7 +1384,7 @@ Los dashboards de residente y admin están completos (PASOS 16, 18). Ahora se co
 ### Limitaciones
 - El guardia NO puede modificar invitaciones ni access grants.
 - El guardia NO puede crear invitaciones.
-- NO implementar la marca de llegada manual desde el frontend del guardia (eso se hace desde el simulador del nodo local).
+- NO implementar la marca de llegada manual desde el frontend del guardia (eso se hace desde el simulador del Motor de Acceso).
 - Interfaz simple y clara, optimizada para uso rápido en caseta.
 - NO implementar búsqueda avanzada.
 
@@ -1200,11 +1411,11 @@ El guardia es solo consulta. NO puede modificar nada. Interfaz simple y rápida.
 ## PASO 20: Pruebas de integración end-to-end
 
 ### Contexto
-Todos los componentes del sistema ya están construidos (PASOS 1-19). Ahora se debe validar que el flujo completo funciona de extremo a extremo: desde la creación de la invitación hasta la decisión de acceso en el nodo local.
+Todos los componentes del sistema ya están construidos (PASOS 1-19). Ahora se debe validar que el flujo completo funciona de extremo a extremo: desde la creación de la invitación hasta la decisión de acceso en el Motor de Acceso.
 
 ### Lo que ya existe (PASOS 1-19)
 - Backend principal completo.
-- Nodo local completo con simulador.
+- Motor de Acceso completo con simulador.
 - Frontend completo.
 
 ### Qué debe implementar el programador
@@ -1220,8 +1431,8 @@ Todos los componentes del sistema ya están construidos (PASOS 1-19). Ahora se d
      3. Registrar visitante por link público.
      4. Subir selfie y documento.
      5. Confirmar visitante.
-     6. Verificar que el nodo local recibió el permiso.
-     7. Simular reconocimiento en nodo local → grant.
+     6. Verificar que el Motor de Acceso recibió el permiso.
+     7. Simular reconocimiento en Motor de Acceso → grant.
      8. Verificar que el evento llegó al core.
      9. Verificar que invitación cambió a `used`.
    - `tests/integration/test_cancel_flow.py`:
@@ -1229,7 +1440,7 @@ Todos los componentes del sistema ya están construidos (PASOS 1-19). Ahora se d
      2. Registrar visitante.
      3. Confirmar.
      4. Cancelar invitación.
-     5. Verificar revocación en nodo local.
+     5. Verificar revocación en Motor de Acceso.
      6. Simular reconocimiento → deny.
    - `tests/integration/test_expiration_flow.py`:
      1. Crear invitación con expiración inmediata.
@@ -1253,7 +1464,7 @@ Todos los componentes del sistema ya están construidos (PASOS 1-19). Ahora se d
 ```
 Objetivo: crear pruebas de integración end-to-end para el sistema de acceso condominal.
 
-CONTEXTO: Hay 3 servicios: backend (port 5000), nodo local (port 5500), frontend (port 3000). Todos ya están implementados.
+CONTEXTO: Hay 3 servicios: backend (port 5000), Motor de Acceso (port 5500), frontend (port 3000). Todos ya están implementados.
 
 Crea:
 1. Script seed de datos de prueba (condominio, unidades, usuarios)
@@ -1294,9 +1505,9 @@ El MVP está completo y probado (PASOS 1-20). Ahora se genera toda la documentac
    - Documentación completa de todos los endpoints del backend.
    - Headers, body, response de cada uno.
    - Códigos de error.
-5. Completar `docs/API_LOCAL_NODE.md`:
-   - Documentación completa de las APIs del nodo local.
-6. Completar `local-access-node/docs/`:
+5. Completar `docs/API_MOTOR_DE_ACCESO.md`:
+   - Documentación completa de las APIs del Motor de Acceso.
+6. Completar `motor-de-acceso/docs/`:
    - `README.md`, `API.md`, `DATA_MODEL.md`, `INTEGRATION.md` según sección 17.
 7. Actualizar `README.md` raíz del proyecto.
 
@@ -1312,15 +1523,15 @@ El MVP está completo y probado (PASOS 1-20). Ahora se genera toda la documentac
 ```
 Objetivo: generar la documentación completa del MVP del sistema de acceso condominal.
 
-CONTEXTO: El sistema está completo con 3 componentes: backend, frontend, nodo local. Revisa el código real para documentar lo que realmente se implementó.
+CONTEXTO: El sistema está completo con 3 componentes: backend, frontend, Motor de Acceso. Revisa el código real para documentar lo que realmente se implementó.
 
 Documentos a generar:
 1. docs/README.md — Guía general, instalación, configuración
 2. docs/MVP.md — Resumen funcional, flujos, limitaciones
 3. docs/ARCHITECTURE.md — Arquitectura, stack, comunicación
 4. docs/API_CORE.md — Todos los endpoints del backend
-5. docs/API_LOCAL_NODE.md — APIs del nodo local
-6. local-access-node/docs/ — README, API, DATA_MODEL, INTEGRATION
+5. docs/API_MOTOR_DE_ACCESO.md — APIs del Motor de Acceso
+6. motor-de-acceso/docs/ — README, API, DATA_MODEL, INTEGRATION
 
 Documentar el estado REAL del código. Incluir limitaciones conocidas y credenciales de prueba.
 ```
@@ -1340,11 +1551,11 @@ Documentar el estado REAL del código. Incluir limitaciones conocidas y credenci
 | 7 | Backend | Confirmación + Access Grants | 6 |
 | 8 | Backend | APIs de Guardia y Administrador | 3 |
 | 9 | Backend | Métricas operativas | 8 |
-| 10 | Nodo Local | Modelos de datos del nodo local | 1 |
-| 11 | Nodo Local | APIs del nodo local | 10 |
-| 12 | Integración | Sincronización Backend → Nodo Local | 7, 11 |
-| 13 | Integración | Callback Nodo Local → Core | 12 |
-| 14 | Nodo Local | Simulador local de control de acceso (UI) | 11 |
+| 10 | Motor de Acceso | Modelos de datos del Motor de Acceso | 1 |
+| 11 | Motor de Acceso | APIs del Motor de Acceso | 10 |
+| 12 | Integración | Sincronización Backend → Motor de Acceso | 7, 11 |
+| 13 | Integración | Callback Motor de Acceso → Core | 12 |
+| 14 | Motor de Acceso | Simulador local de control de acceso (UI) | 11 |
 | 15 | Frontend | Login y autenticación | 1, 3 |
 | 16 | Frontend | Dashboard del residente | 15 |
 | 17 | Frontend | Registro público del visitante | 15 |
@@ -1361,4 +1572,4 @@ Documentar el estado REAL del código. Incluir limitaciones conocidas y credenci
 2. **Para cada paso**: usar este documento + `proyectoBASE.md` + los archivos de los pasos previos completados.
 3. **Verificación entre pasos**: Después de cada paso, verificar que los entregables existen y que el componente sigue arrancando correctamente.
 4. **Base de datos**: Se debe asumir que PostgreSQL está corriendo localmente. El PASO 1 no crea las DBs; se deben crear manualmente antes del PASO 2.
-5. **Puertos**: Backend en 5000, Frontend en 3000, Nodo Local en 5500.
+5. **Puertos**: Backend en 5000, Frontend en 3000, Motor de Acceso en 5500.

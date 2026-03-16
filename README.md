@@ -1,6 +1,6 @@
 # Sistema de Gestión Condominal y Acceso Facial por Invitación
 
-MVP para gestión condominal con flujo de invitación, registro web de visitantes y control de acceso por nodo local independiente.
+MVP para gestión condominal con flujo de invitación, registro web de visitantes y control de acceso por Motor de Acceso independiente.
 
 ## Componentes
 
@@ -8,7 +8,7 @@ MVP para gestión condominal con flujo de invitación, registro web de visitante
 |----------------------|------------------------------------------|--------------------|
 | `backend/`           | Flask — API principal (core de negocio)  | 5000               |
 | `frontend/`          | Next.js — Interfaz web                   | 3000               |
-| `local-access-node/` | Flask — Nodo local de control de acceso  | 5500               |
+| `motor-de-acceso/` | Flask — Motor de Acceso de control de acceso  | 5500               |
 
 ---
 
@@ -52,10 +52,10 @@ No se sube:
 
 Con este enfoque, cualquier miembro del equipo puede clonar el repositorio e instalar dependencias en su máquina con `pip install -r requirements.txt` o `npm install`.
 
-### Nodo local
+### Motor de Acceso
 
 ```bash
-cd local-access-node
+cd motor-de-acceso
 cp .env.example .env
 # Editar .env con tus credenciales y NODE_ID
 pip install -r requirements.txt
@@ -70,6 +70,6 @@ python run.py
 - [docs/MVP.md](docs/MVP.md) — Alcance y criterios de terminado
 - [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) — Diagrama y decisiones de arquitectura
 - [docs/API_CORE.md](docs/API_CORE.md) — Endpoints del backend principal
-- [docs/API_LOCAL_NODE.md](docs/API_LOCAL_NODE.md) — Endpoints del nodo local
+- [docs/API_MOTOR_DE_ACCESO.md](docs/API_MOTOR_DE_ACCESO.md) — Endpoints del Motor de Acceso
 - [docs/ROADMAP.md](docs/ROADMAP.md) — Fases del proyecto
-- [local-access-node/docs/](local-access-node/docs/) — Documentación específica del nodo local
+- [motor-de-acceso/docs/](motor-de-acceso/docs/) — Documentación específica del Motor de Acceso

@@ -9,7 +9,7 @@ Este proyecto busca construir un **MVP de gestión condominal con acceso facial 
 3. **Dashboard administrativo/local** para consulta operativa.
 4. **Registro de visitantes por link web** sin app.
 5. **Confirmación del residente** antes de habilitar acceso.
-6. **Sincronización hacia un nodo local de acceso**.
+6. **Sincronización hacia un Motor de Acceso de acceso**.
 7. **Control local simplificado** para decidir si una persona puede pasar o no.
 
 El objetivo de esta versión es entregar una solución funcional, simple y lista para pruebas reales en un **condominio piloto**, dejando fuera pagos, morosidad, vista regional e integración real con hardware.
@@ -18,7 +18,7 @@ El objetivo de esta versión es entregar una solución funcional, simple y lista
 
 ## 2. Objetivo del MVP
 
-Construir un sistema que permita que un residente genere una invitación, que un visitante se registre desde un link web con su selfie y documento, que el residente confirme esa visita y que el sistema publique el permiso al **nodo local de acceso**, el cual decidirá si el visitante **puede pasar o no**.
+Construir un sistema que permita que un residente genere una invitación, que un visitante se registre desde un link web con su selfie y documento, que el residente confirme esa visita y que el sistema publique el permiso al **Motor de Acceso de acceso**, el cual decidirá si el visitante **puede pasar o no**.
 
 ### Objetivo principal
 - Tener un flujo **estable** de registro por invitación y autorización.
@@ -26,7 +26,7 @@ Construir un sistema que permita que un residente genere una invitación, que un
 - Dejar una arquitectura preparada para conectar después control facial real.
 
 ### Criterio principal de éxito
-- **Sincronización estable** entre backend principal y nodo local.
+- **Sincronización estable** entre backend principal y Motor de Acceso.
 
 ---
 
@@ -55,7 +55,7 @@ Construir un sistema que permita que un residente genere una invitación, que un
 - Bitácora de accesos
 - Cifrado y manejo básico seguro de archivos
 - Botón de **WhatsApp** para atención al cliente
-- **Nodo local independiente** para pruebas prácticas de acceso
+- **Motor de Acceso independiente** para pruebas prácticas de acceso
 - API Key para comunicación local entre servicios
 
 ### No incluye en esta versión
@@ -135,7 +135,7 @@ No puede:
 11. Si intenta registrarse después del vencimiento, **no podrá registrarse**.
 12. Si el residente cancela después del registro, **no se le da acceso**.
 13. Un mismo link no puede reutilizarse para múltiples registros.
-14. El nodo local solo necesita saber, en esta fase, el **estatus del usuario**: si puede pasar o no.
+14. El Motor de Acceso solo necesita saber, en esta fase, el **estatus del usuario**: si puede pasar o no.
 
 ---
 
@@ -180,12 +180,12 @@ No puede:
 6. Completa el registro.
 7. El residente confirma.
 8. El backend principal genera un permiso de acceso.
-9. El backend sincroniza el permiso al nodo local.
-10. El nodo local marca a ese visitante como `allowed`.
+9. El backend sincroniza el permiso al Motor de Acceso.
+10. El Motor de Acceso marca a ese visitante como `allowed`.
 
 ### 7.2 Flujo de acceso
 1. El visitante llega al condominio.
-2. El nodo local recibe un intento de acceso.
+2. El Motor de Acceso recibe un intento de acceso.
 3. Evalúa si:
    - el usuario existe
    - está permitido
@@ -199,8 +199,8 @@ No puede:
 ### 7.3 Flujo de cancelación
 1. El residente cancela una invitación.
 2. El backend principal revoca el permiso.
-3. El nodo local actualiza el usuario a `blocked`.
-4. Si intenta pasar, el nodo local devuelve `deny`.
+3. El Motor de Acceso actualiza el usuario a `blocked`.
+4. Si intenta pasar, el Motor de Acceso devuelve `deny`.
 
 ---
 
@@ -227,9 +227,9 @@ No puede:
 
 ### 8.2 Principios de arquitectura
 - El **backend core** contiene la lógica del negocio.
-- El **nodo local** contiene la lógica operativa de acceso.
-- El nodo local debe poder operar de forma simple e independiente para pruebas.
-- La comunicación entre core y nodo local se protegerá con **API Key**.
+- El **Motor de Acceso** contiene la lógica operativa de acceso.
+- El Motor de Acceso debe poder operar de forma simple e independiente para pruebas.
+- La comunicación entre core y Motor de Acceso se protegerá con **API Key**.
 - En esta fase, el rostro se manejará como **imagen**, no como template biométrico.
 
 ---
@@ -244,7 +244,7 @@ No puede:
 - **Autenticación interna:** email + contraseña
 - **Autorización:** roles
 
-### Nodo local independiente
+### Motor de Acceso independiente
 - **Backend/API local:** Flask
 - **DB local:** Postgres
 - **Storage local:** sistema de archivos local
@@ -313,7 +313,7 @@ project-root/
     run.py
     .env
 
-  local-access-node/
+  motor-de-acceso/
     app/
       __init__.py
       config.py
@@ -353,7 +353,7 @@ project-root/
     MVP.md
     ARCHITECTURE.md
     API_CORE.md
-    API_LOCAL_NODE.md
+    API_MOTOR_DE_ACCESO.md
     ROADMAP.md
 ```
 
@@ -453,7 +453,7 @@ Campos sugeridos:
 
 ---
 
-## 12. Modelo de datos del nodo local
+## 12. Modelo de datos del Motor de Acceso
 
 ### 12.1 `access_users`
 Representa el espejo mínimo de personas autorizadas o bloqueadas para acceso local.
@@ -613,12 +613,12 @@ Retorna métricas básicas del MVP.
 
 ---
 
-## 14. APIs del nodo local de acceso
+## 14. APIs del Motor de Acceso de acceso
 
 Base path sugerido: `/api/v1`
 
 ### Seguridad
-Todas las peticiones del backend principal al nodo local deberán enviar:
+Todas las peticiones del backend principal al Motor de Acceso deberán enviar:
 
 ```http
 X-API-Key: local-node-shared-secret
@@ -630,7 +630,7 @@ Response:
 ```json
 {
   "status": "ok",
-  "service": "local-access-node",
+  "service": "motor-de-acceso",
   "version": "1.0.0"
 }
 ```
@@ -787,7 +787,7 @@ Response:
 }
 ```
 
-### 14.9 Callback del nodo local al core
+### 14.9 Callback del Motor de Acceso al core
 #### `POST /internal/v1/local-access/events`
 Body:
 ```json
@@ -814,7 +814,7 @@ Response:
 
 ---
 
-## 15. Reglas de negocio del nodo local
+## 15. Reglas de negocio del Motor de Acceso
 
 Estas reglas deben vivir localmente para que el acceso no dependa del backend central:
 
@@ -830,7 +830,7 @@ Estas reglas deben vivir localmente para que el acceso no dependa del backend ce
 
 ## 16. Simulador local de control de acceso
 
-El nodo local incluirá una UI sencilla para pruebas prácticas, inspirada en la operación de un control de acceso facial.
+El Motor de Acceso incluirá una UI sencilla para pruebas prácticas, inspirada en la operación de un control de acceso facial.
 
 ### Pantalla mínima del simulador
 Ruta sugerida:
@@ -854,36 +854,36 @@ Funciones:
 
 ### Objetivo del simulador
 - Probar el flujo end-to-end sin depender de hardware real
-- Validar la API del nodo local
+- Validar la API del Motor de Acceso
 - Permitir pruebas del backend del proyecto desde el inicio
 
 ---
 
-## 17. Documentación que debe acompañar la carpeta `local-access-node/`
+## 17. Documentación que debe acompañar la carpeta `motor-de-acceso/`
 
-### `local-access-node/docs/README.md`
+### `motor-de-acceso/docs/README.md`
 Debe explicar:
-- qué es el nodo local
+- qué es el Motor de Acceso
 - qué resuelve
 - cómo correrlo localmente
 - variables de entorno
 - cómo autenticarse por API Key
 
-### `local-access-node/docs/API.md`
+### `motor-de-acceso/docs/API.md`
 Debe contener:
 - todos los endpoints
 - headers requeridos
 - ejemplos request/response
 - códigos de error
 
-### `local-access-node/docs/DATA_MODEL.md`
+### `motor-de-acceso/docs/DATA_MODEL.md`
 Debe contener:
 - tablas
 - relaciones
 - estados
 - reglas de transición
 
-### `local-access-node/docs/INTEGRATION.md`
+### `motor-de-acceso/docs/INTEGRATION.md`
 Debe contener:
 - cómo el backend principal publica permisos
 - cómo revoca permisos
@@ -898,10 +898,10 @@ Debe contener:
 Estas son las métricas más relevantes para tu objetivo actual:
 
 ### Operativas
-- tiempo promedio de sincronización al nodo local
+- tiempo promedio de sincronización al Motor de Acceso
 - porcentaje de sincronizaciones exitosas
 - cantidad de errores de sincronización
-- tiempo promedio de respuesta del nodo local
+- tiempo promedio de respuesta del Motor de Acceso
 - tiempo promedio de consulta del historial
 
 ### De negocio / flujo
@@ -918,7 +918,7 @@ Estas son las métricas más relevantes para tu objetivo actual:
 - porcentaje de registros con selfie válida
 - porcentaje de registros con documento válido
 - latencia de publicación de permiso
-- tasa de eventos no sincronizados desde nodo local al core
+- tasa de eventos no sincronizados desde Motor de Acceso al core
 
 ---
 
@@ -934,8 +934,8 @@ Estas son las métricas más relevantes para tu objetivo actual:
 - Dashboard residente básico
 - Dashboard admin básico
 
-### Fase 2 — Nodo local y sincronización
-- Servicio `local-access-node`
+### Fase 2 — Motor de Acceso y sincronización
+- Servicio `motor-de-acceso`
 - Alta/revocación de usuarios locales
 - Simulador de acceso
 - Registro de eventos
@@ -960,19 +960,19 @@ Estas son las métricas más relevantes para tu objetivo actual:
 
 ## 20. Consideraciones para futura integración con Hikvision
 
-Para el MVP, el nodo local trabajará con **imagen facial simple** y no con template biométrico. Esto es correcto para pruebas. Sin embargo, la API del proyecto debe quedar preparada para una futura integración real.
+Para el MVP, el Motor de Acceso trabajará con **imagen facial simple** y no con template biométrico. Esto es correcto para pruebas. Sin embargo, la API del proyecto debe quedar preparada para una futura integración real.
 
 ### Lo que asumiremos desde ahora
 - El dispositivo real estará en red local.
-- La integración futura se hará desde el nodo local, no desde el frontend.
+- La integración futura se hará desde el Motor de Acceso, no desde el frontend.
 - El backend principal nunca hablará directo con el dispositivo.
-- El nodo local será el adaptador entre negocio y hardware.
+- El Motor de Acceso será el adaptador entre negocio y hardware.
 
 ### Contrato futuro sugerido del adaptador
 Crear una capa tipo:
 
 ```text
-local-access-node/app/integrations/hikvision_adapter.py
+motor-de-acceso/app/integrations/hikvision_adapter.py
 ```
 
 Responsabilidades:
@@ -996,7 +996,7 @@ De esta manera, aunque hoy uses simulador, el backend ya queda desacoplado del f
 
 ## 21. Decisiones de seguridad mínimas
 
-- API Key compartida entre backend principal y nodo local
+- API Key compartida entre backend principal y Motor de Acceso
 - Passwords con hash seguro
 - Validación de tipo/tamaño de archivos
 - No exponer paths internos completos
@@ -1027,7 +1027,7 @@ LOCAL_NODE_API_KEY=local-node-shared-secret
 WHATSAPP_SUPPORT_NUMBER=521XXXXXXXXXX
 ```
 
-### Nodo local
+### Motor de Acceso
 ```env
 APP_ENV=development
 DATABASE_URL=postgresql://user:pass@localhost:5432/local_access_node
@@ -1049,8 +1049,8 @@ El MVP se considerará listo cuando:
 2. Pueda crear una invitación con vigencia.
 3. El visitante pueda registrarse por link web sin app.
 4. El residente pueda confirmar o cancelar.
-5. El backend publique correctamente el permiso al nodo local.
-6. El nodo local pueda decidir `grant` o `deny`.
+5. El backend publique correctamente el permiso al Motor de Acceso.
+6. El Motor de Acceso pueda decidir `grant` o `deny`.
 7. El guardia pueda consultar historial y marcar llegada manual.
 8. Los eventos queden registrados en bitácora.
 9. El flujo funcione en un condominio piloto con varios accesos.
@@ -1062,15 +1062,15 @@ El MVP se considerará listo cuando:
 1. Documento funcional del MVP
 2. Documento de arquitectura
 3. Documento de APIs del core
-4. Documento de APIs del nodo local
+4. Documento de APIs del Motor de Acceso
 5. Modelo de datos del core
-6. Modelo de datos del nodo local
+6. Modelo de datos del Motor de Acceso
 7. Repositorio con carpetas separadas:
    - `frontend/`
    - `backend/`
-   - `local-access-node/`
+   - `motor-de-acceso/`
 8. Simulador local operativo
-9. Colección Postman/Bruno con endpoints del core y del nodo local
+9. Colección Postman/Bruno con endpoints del core y del Motor de Acceso
 
 ---
 
@@ -1079,6 +1079,6 @@ El MVP se considerará listo cuando:
 La versión correcta del proyecto para esta etapa no es solo un sistema de invitaciones. Es un sistema compuesto por:
 
 - un **core de negocio** (residentes, invitaciones, confirmación, dashboards), y
-- un **nodo local de acceso** (decisión local, estatus de paso, eventos, simulación de control facial).
+- un **Motor de Acceso de acceso** (decisión local, estatus de paso, eventos, simulación de control facial).
 
 Esa separación te permite construir el MVP de manera ordenada, hacer pruebas reales sin depender todavía del hardware y dejar una base clara para que el equipo de backend sepa **qué construir, cómo integrarlo y con qué APIs trabajar**.
