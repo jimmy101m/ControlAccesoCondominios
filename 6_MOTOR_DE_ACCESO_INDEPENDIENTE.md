@@ -70,6 +70,7 @@ Archivos a tocar:
 Contenido exacto:
 - `access_user` con campos minimos:
   - `external_user_id`
+  - `invitation_id`
   - `full_name`
   - `status`
   - `access_mode`
@@ -80,6 +81,7 @@ Contenido exacto:
 - `access_event` con campos minimos:
   - `event_id`
   - `external_user_id`
+  - `invitation_id` (nullable)
   - `decision`
   - `reason_code`
   - `device_id`
@@ -135,7 +137,7 @@ Contenido exacto:
   - `GET /api/v1/access-users` (M-USR-04)
 
 Contratos minimos:
-- `M-USR-01` request: `external_user_id`, `full_name`, `status`, `access_mode`, `valid_from`, `valid_to`, `face_ref`, `plate_number`.
+- `M-USR-01` request: `external_user_id`, `invitation_id`, `full_name`, `status`, `access_mode`, `valid_from`, `valid_to`, `face_ref`, `plate_number`.
 - `M-USR-01` response 200: `{ ok, user{external_user_id,status} }`.
 - `M-USR-02` request: `external_user_id`, `reason`.
 - `M-USR-02` response 200: `{ ok, revoked_at }`.
@@ -171,6 +173,7 @@ Reglas operativas de decision:
 - `allowed` solo si usuario existe, esta activo y dentro de vigencia.
 - `denied` para: no existe, revocado, o fuera de ventana temporal.
 - Todo check debe crear `access_event` local.
+- El `invitation_id` del evento se toma del registro local del usuario (`access_user.invitation_id`) cuando exista.
 
 Validacion de salida (DoD):
 - Se generan `reason_code` consistentes (`MATCH_OK`, `USER_NOT_FOUND`, `USER_REVOKED`, `OUT_OF_WINDOW`).
@@ -187,7 +190,7 @@ Contenido exacto:
   - `GET /api/v1/access-events` (M-EVT-02)
 
 Contratos minimos:
-- `M-EVT-01` request: `external_user_id`, `device_id`, `guard_user_id`, `note`.
+- `M-EVT-01` request: `external_user_id`, `invitation_id` (nullable), `device_id`, `guard_user_id`, `note`.
 - `M-EVT-01` response 201: `event{id,decision,source,occurred_at}`.
 - `M-EVT-02` query: `page`, `page_size`, `from`, `to`.
 - `M-EVT-02` response 200: `items[]`, `total`.
@@ -215,7 +218,7 @@ Contenido exacto:
 - Si exito: set `synced_to_core_at` en evento local.
 
 Contrato minimo hacia Core:
-- Request: `event_id`, `external_user_id`, `invitation_id`, `decision`, `reason_code`, `device_id`, `occurred_at`, `raw`.
+- Request: `event_id`, `external_user_id`, `invitation_id` (nullable), `decision`, `reason_code`, `device_id`, `occurred_at`, `raw`.
 - Response esperada 202: `{ ok, synced, received_at }`.
 
 Reglas operativas:

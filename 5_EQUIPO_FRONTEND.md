@@ -240,7 +240,7 @@ Reglas UX/negocio:
 Validacion de salida (DoD):
 - Cards siempre renderizan sin valores undefined.
 
-### PASO 10 - Gestion admin de residentes e invitaciones (C-RES-01/02 y C-INV-01)
+### PASO 10 - Gestion admin de residentes e invitaciones (C-RES-01/02/03 y C-INV-01)
 Archivos a tocar:
 - `frontend/src/app/admin/residents/page.tsx`
 - `frontend/src/app/admin/residents/new/page.tsx`
@@ -249,6 +249,7 @@ Archivos a tocar:
 Contenido exacto:
 - Crear residente con contrato C-RES-01.
 - Editar residente con contrato C-RES-02.
+- Listar residentes con contrato C-RES-03.
 - Listar invitaciones con contrato C-INV-01.
 
 Reglas UX/negocio:

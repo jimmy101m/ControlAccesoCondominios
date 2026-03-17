@@ -115,7 +115,7 @@ Validacion de salida (DoD):
 
 ## FASE 2 - RESIDENTES E INVITACIONES PRIVADAS
 
-### PASO 3 - Residentes (C-RES-01/02)
+### PASO 3 - Residentes (C-RES-01/02/03)
 Archivos a tocar:
 - `backend/app/routes/residents.py`
 - `backend/app/services/resident_service.py`
@@ -125,14 +125,18 @@ Contenido exacto:
 - Endpoints:
   - `POST /api/v1/residents`
   - `PATCH /api/v1/residents/{id}`
+  - `GET /api/v1/residents`
 - `resident_service.py`:
   - `create_resident(payload)`
   - `update_resident(resident_id, payload)`
+  - `list_residents(filters, page, page_size)`
 
 Contrato minimo:
 - `POST` request: `full_name`, `email`, `password`, `condominium_id`, `unit_id`, `status`.
 - `POST` response 201: `resident{id,full_name,email,role,status,condominium_id,unit_id}`.
 - `PATCH` response 200: `resident` actualizado.
+- `GET` query: `page`, `page_size`, `status`, `search`.
+- `GET` response 200: `items`, `page`, `page_size`, `total`.
 
 Reglas de negocio:
 - Solo `admin_local`.
@@ -320,11 +324,15 @@ Contenido exacto:
 - Validar header `X-API-Key`.
 - Persistir evento siempre, incluso si falla procesamiento secundario.
 
+Contrato minimo request:
+- `event_id`, `external_user_id`, `invitation_id` (nullable), `decision`, `reason_code`, `device_id`, `occurred_at`, `raw`.
+
 Contrato minimo:
 - Response 202: `{ "ok": true, "synced": true|false, "received_at": "..." }`
 
 Reglas de negocio:
 - API key invalida -> 401 o 403 (definir y mantener consistente).
+- `invitation_id` puede llegar `null` para eventos manuales del nodo.
 
 Validacion de salida (DoD):
 - Sin API key -> rechazo.
@@ -350,14 +358,14 @@ Validacion de salida (DoD):
 Archivos a tocar:
 - `backend/app/services/access_sync_service.py` (crear)
 - `backend/app/services/invitation_state_service.py`
-- `backend/app/routes/access.py` (si se agrega retry)
+- `backend/app/routes/access.py`
 
 Contenido exacto:
 - `sync_grant_to_local_node(access_grant_id)` para upsert en nodo.
 - `revoke_grant_on_local_node(access_grant_id)` para revocacion en nodo.
 - Integrar llamada de sync despues de `confirm-visitor`.
 - Integrar revocacion al cancelar invitacion.
-- Endpoint admin opcional recomendado: `POST /api/v1/admin/access-grants/{grantId}/retry-sync`.
+- Endpoint admin obligatorio: `POST /api/v1/admin/access-grants/{grantId}/retry-sync`.
 
 Reglas de negocio:
 - Timeout HTTP: 10s.
