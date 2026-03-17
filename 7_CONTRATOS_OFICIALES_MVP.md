@@ -136,6 +136,32 @@ Request:
 ```
 Response 200: objeto resident actualizado.
 
+### C-RES-03 GET /api/v1/residents
+Query:
+- page
+- page_size
+- status
+- search
+Response 200:
+```json
+{
+  "items": [
+    {
+      "id": "uuid",
+      "full_name": "Nuevo Residente",
+      "email": "nuevo@condominio.com",
+      "role": "resident",
+      "status": "active",
+      "condominium_id": "uuid",
+      "unit_id": "uuid"
+    }
+  ],
+  "page": 1,
+  "page_size": 20,
+  "total": 1
+}
+```
+
 ### C-INV-01 GET /api/v1/invitations
 Query:
 - status
@@ -358,12 +384,13 @@ Response 200:
 
 ### C-CB-01 POST /internal/v1/local-access/events
 Headers: X-API-Key obligatorio.
+Nota: `invitation_id` puede ser `null` en eventos manuales cuando no exista trazabilidad a invitacion.
 Request:
 ```json
 {
   "event_id": "uuid",
   "external_user_id": "visitor_uuid",
-  "invitation_id": "uuid",
+  "invitation_id": "uuid o null",
   "decision": "allowed",
   "reason_code": "MATCH_OK",
   "device_id": "gate-1",
@@ -400,6 +427,7 @@ Request:
 ```json
 {
   "external_user_id": "visitor_uuid",
+  "invitation_id": "uuid",
   "full_name": "Visitante",
   "status": "active",
   "access_mode": "pedestrian",
@@ -466,6 +494,7 @@ Request:
 ```json
 {
   "external_user_id": "visitor_uuid",
+  "invitation_id": null,
   "device_id": "gate-1",
   "guard_user_id": "guard_uuid",
   "note": "Ingreso manual"
@@ -527,7 +556,7 @@ Response 200:
 - /resident -> C-INV-01, C-INV-02, C-INV-03, C-INV-04
 - /invitation/[token] -> C-PUB-01, C-PUB-02, C-PUB-03, C-PUB-04
 - /admin -> C-MET-01, C-ACC-03
-- /admin/residents -> C-RES-01, C-RES-02
+- /admin/residents -> C-RES-01, C-RES-02, C-RES-03
 - /admin/invitations -> C-INV-01
 - /guard -> C-ACC-02
 - /guard/history -> C-ACC-01
