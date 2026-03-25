@@ -10,7 +10,7 @@ from app.models.user import User
 def seed():
     """Inserta los roles base y un usuario administrador de prueba."""
     # Crear roles base
-    base_roles = ["admin", "resident", "security"]
+    base_roles = ["admin_local", "resident", "guard"]
     role_objects = {}
 
     for role_name in base_roles:
@@ -33,7 +33,7 @@ def seed():
         admin_user = User(
             full_name="Administrador de Sistema",
             email=admin_email,
-            role_id=role_objects["admin"].id,
+            role_id=role_objects["admin_local"].id,
             status="active",
         )
         admin_user.set_password("admin123")
