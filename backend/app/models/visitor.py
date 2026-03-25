@@ -1,17 +1,15 @@
 import enum
-from app.models.base import db, TimestampMixin
+from app.models.base import db, BaseMixin
 
 
 class DocumentType(enum.Enum):
-    INE = "INE"
-    PASAPORTE = "PASAPORTE"
-    LICENCIA = "LICENCIA"
+    INE = "ine"
+    PASAPORTE = "pasaporte"
+    LICENCIA = "licencia"
 
 
-class Visitor(db.Model, TimestampMixin):
+class Visitor(db.Model, BaseMixin):
     __tablename__ = "visitors"
-
-    id = db.Column(db.Integer, primary_key=True)
     full_name = db.Column(db.String(150), nullable=False)
     phone = db.Column(db.String(20))
 
