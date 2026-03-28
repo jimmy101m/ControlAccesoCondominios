@@ -35,6 +35,10 @@ def create_app(env: str | None = None) -> Flask:
     from .routes.auth import auth_bp
     app.register_blueprint(auth_bp, url_prefix="/api/v1/auth")
 
+    # Registrar comandos CLI
+    from .commands import register_commands
+    register_commands(app)
+
     return app
 
 
