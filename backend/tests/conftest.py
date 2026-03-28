@@ -1,7 +1,8 @@
 import pytest
 from app import create_app
 from app.extensions import db as _db
-from app.models.user import User, UserRole, UserStatus
+from app.models.user import User
+from app.models.role import Role
 
 
 @pytest.fixture(scope="session")
@@ -37,11 +38,14 @@ def clean_blocklist():
 @pytest.fixture
 def active_user(app):
     with app.app_context():
+        role = Role(name="admin_local")
+        _db.session.add(role)
+        _db.session.flush()
         user = User(
             full_name="Admin Test",
             email="admin@test.com",
-            role=UserRole.admin_local,
-            status=UserStatus.active,
+            role_id=role.id,
+            status="active",
         )
         user.set_password("Admin1234!")
         _db.session.add(user)
@@ -52,11 +56,14 @@ def active_user(app):
 @pytest.fixture
 def inactive_user(app):
     with app.app_context():
+        role = Role(name="resident")
+        _db.session.add(role)
+        _db.session.flush()
         user = User(
             full_name="Inactive User",
             email="inactive@test.com",
-            role=UserRole.resident,
-            status=UserStatus.inactive,
+            role_id=role.id,
+            status="inactive",
         )
         user.set_password("Pass1234!")
         _db.session.add(user)

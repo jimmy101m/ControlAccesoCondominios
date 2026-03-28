@@ -1,5 +1,5 @@
 from flask_jwt_extended import create_access_token
-from app.models.user import User, UserStatus
+from app.models.user import User
 from app.errors import UnauthorizedError
 
 # MVP in-memory blocklist — lost on restart, acceptable for MVP
@@ -10,7 +10,7 @@ def authenticate(email: str, password: str) -> User:
     user = User.query.filter_by(email=email).first()
     if not user or not user.check_password(password):
         raise UnauthorizedError("Credenciales invalidas")
-    if user.status != UserStatus.active:
+    if user.status != "active":
         raise UnauthorizedError("Usuario inactivo")
     return user
 
@@ -24,8 +24,8 @@ def serialize_user(user: User) -> dict:
         "id": user.id,
         "full_name": user.full_name,
         "email": user.email,
-        "role": user.role.value,
-        "status": user.status.value,
+        "role": user.role.name,
+        "status": user.status,
     }
 
 
