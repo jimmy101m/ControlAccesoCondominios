@@ -1,52 +1,64 @@
-const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1";
+const API_BASE_URL = "http://localhost:5000/api/v1";
 
-type HttpMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
+function getToken(): string | null {
+  if (typeof window === "undefined") return null;
+  return localStorage.getItem("token");
+}
 
-type ApiRequestOptions = {
-  method?: HttpMethod;
-  body?: unknown;
-  headers?: HeadersInit;
-  cache?: RequestCache;
-};
-
-export async function apiRequest<T>(
+async function request<T>(
   endpoint: string,
-  options: ApiRequestOptions = {},
+  options: RequestInit = {}
 ): Promise<T> {
-  const { method = "GET", body, headers, cache = "no-store" } = options;
+  const token = getToken();
+
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
+    ...(options.headers as Record<string, string>),
+  };
+
+  if (token) {
+    headers["Authorization"] = `Bearer ${token}`;
+  }
 
   const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-    method,
-    headers: {
-      "Content-Type": "application/json",
-      ...headers,
-    },
-    body: body ? JSON.stringify(body) : undefined,
-    cache,
+    ...options,
+    headers,
   });
 
+  if (response.status === 401) {
+    localStorage.removeItem("token");
+    window.location.href = "/login";
+    throw new Error("Sesión expirada");
+  }
+
   if (!response.ok) {
-    const message = await response.text();
-    throw new Error(message || `Request failed: ${response.status}`);
+    const error = await response.json();
+    throw error;
   }
 
-  if (response.status === 204) {
-    return {} as T;
-  }
-
-  return (await response.json()) as T;
+  return response.json();
 }
 
 export const api = {
-  get: <T>(endpoint: string, headers?: HeadersInit) =>
-    apiRequest<T>(endpoint, { method: "GET", headers }),
-  post: <T>(endpoint: string, body?: unknown, headers?: HeadersInit) =>
-    apiRequest<T>(endpoint, { method: "POST", body, headers }),
-  patch: <T>(endpoint: string, body?: unknown, headers?: HeadersInit) =>
-    apiRequest<T>(endpoint, { method: "PATCH", body, headers }),
-  put: <T>(endpoint: string, body?: unknown, headers?: HeadersInit) =>
-    apiRequest<T>(endpoint, { method: "PUT", body, headers }),
-  delete: <T>(endpoint: string, headers?: HeadersInit) =>
-    apiRequest<T>(endpoint, { method: "DELETE", headers }),
+  get: <T>(endpoint: string) =>
+    request<T>(endpoint, { method: "GET" }),
+
+  post: <T>(endpoint: string, body: unknown) =>
+    request<T>(endpoint, {
+      method: "POST",
+      body: JSON.stringify(body),
+    }),
+
+  patch: <T>(endpoint: string, body: unknown) =>
+    request<T>(endpoint, {
+      method: "PATCH",
+      body: JSON.stringify(body),
+    }),
+
+  upload: <T>(endpoint: string, formData: FormData) =>
+    request<T>(endpoint, {
+      method: "POST",
+      body: formData,
+      headers: {},
+    }),
 };
