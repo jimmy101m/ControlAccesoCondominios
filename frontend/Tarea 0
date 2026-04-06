@@ -1,0 +1,50 @@
+import streamlit as st
+
+# Configuración de página
+st.set_page_config(page_title="Control de Acceso", layout="wide")
+
+# Sidebar
+st.sidebar.title("Sistema")
+menu = st.sidebar.radio("Navegación", ["Dashboard", "Usuarios", "Accesos"])
+
+# Estilos tipo Figma
+st.markdown("""
+    <style>
+    .card {
+        padding: 20px;
+        border-radius: 15px;
+        background-color: #f5f5f5;
+        box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
+    }
+    </style>
+""", unsafe_allow_html=True)
+
+# Contenido principal
+st.title("🔐 Control de Acceso")
+
+if menu == "Dashboard":
+    col1, col2, col3 = st.columns(3)
+
+    with col1:
+        st.markdown('<div class="card">Usuarios Activos: 120</div>', unsafe_allow_html=True)
+    with col2:
+        st.markdown('<div class="card">Entradas Hoy: 45</div>', unsafe_allow_html=True)
+    with col3:
+        st.markdown('<div class="card">Alertas: 3</div>', unsafe_allow_html=True)
+
+elif menu == "Usuarios":
+    st.subheader("Gestión de Usuarios")
+
+    nombre = st.text_input("Nombre")
+    correo = st.text_input("Correo")
+
+    if st.button("Agregar usuario"):
+        st.success(f"Usuario {nombre} agregado correctamente")
+
+elif menu == "Accesos":
+    st.subheader("Registro de accesos")
+
+    st.table([
+        {"Nombre": "Juan", "Hora": "08:00"},
+        {"Nombre": "Ana", "Hora": "09:15"},
+    ])
