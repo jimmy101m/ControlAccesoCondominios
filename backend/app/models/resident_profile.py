@@ -7,7 +7,7 @@ class ResidentProfile(db.Model, TimestampMixin):
     id = db.Column(db.Integer, primary_key=True)
 
     # Las tres llaves foráneas del residente
-    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    user_id = db.Column(db.String(36), db.ForeignKey("users.id"), nullable=False)
     condominium_id = db.Column(
         db.Integer, db.ForeignKey("condominiums.id"), nullable=False
     )

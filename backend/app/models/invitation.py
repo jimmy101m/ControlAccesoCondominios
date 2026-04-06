@@ -25,9 +25,9 @@ class Invitation(db.Model, BaseMixin):
     # FKs usando String(36) por los UUIDs de User
     resident_id = db.Column(db.String(36), db.ForeignKey("users.id"), nullable=False)
     condominium_id = db.Column(
-        db.String(36), db.ForeignKey("condominiums.id"), nullable=False
+        db.Integer, db.ForeignKey("condominiums.id"), nullable=False
     )
-    unit_id = db.Column(db.String(36), db.ForeignKey("units.id"), nullable=False)
+    unit_id = db.Column(db.Integer, db.ForeignKey("units.id"), nullable=False)
 
     # Campos con Índice para velocidad de búsqueda
     token = db.Column(db.String(100), unique=True, nullable=False)
