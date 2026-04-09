@@ -1,0 +1,85 @@
+https://www.figma.com/design/DBmmr0heOaB8vUbE7R8xFc/Control-de-acceso?node-id=0-1&t=3E3BDmjqCphTqyaY-1
+🔷 1. Estructura del prototipo (lo que DEBE tener tu app)
+Tu app de control de acceso debería tener estas pantallas clave:
+🔐 1. Login / Autenticación
+Email + contraseña
+Opción SSO (empresa)
+Estado de error / validación
+💡 Importante: en sistemas reales, el acceso suele ser seguro y centralizado (SSO + roles)
+🧠 2. Dashboard (Home)
+KPIs:
+Accesos hoy
+Usuarios activos
+Alertas
+Gráfica de actividad
+Últimos accesos
+👥 3. Gestión de usuarios
+Lista de usuarios
+Roles:
+Admin
+Supervisor
+Operador
+Estado:
+Activo / Inactivo
+🚪 4. Control de accesos
+Entradas / salidas
+Logs en tiempo real
+Filtros por fecha / usuario
+⚙️ 5. Configuración
+Permisos
+Integraciones
+Dispositivos
+🎨 2. Aplicación EXACTA de tu Brand Guide
+Aquí es donde lo hacemos nivel “empresa seria” 👇
+🎯 Colores (crítico)
+Fondo principal:
+👉 #0D1B3E (Navy Deep)
+Cards / UI:
+👉 #1A3A7C (Orbit Blue)
+Botones CTA:
+👉 #29ABE2 (Signal Cyan)
+Estados:
+👉 Verde #00C48C SOLO para éxito
+🚫 Nunca:
+Fondo cyan
+Rojo
+Verde decorativo
+🔤 Tipografía
+Todo con:
+Inter Semibold → títulos
+Inter Regular → contenido
+JetBrains Mono → datos (logs, IDs)
+💡 Esto en dashboards transmite precisión técnica (clave en B2B)
+🧩 UI Style (muy importante)
+Tu app debe verse así:
+Minimalista
+Mucho espacio (padding)
+Bordes redondeados (8–12px)
+Cards limpias
+Iconos simples
+🧱 3. Sistema de componentes (esto te lo dejo listo mentalmente para código)
+Botón principal
+bg-[#29ABE2] text-white rounded-lg px-4 py-2
+hover:opacity-90
+Card
+bg-[#1A3A7C] rounded-xl p-6 shadow-md
+Input
+bg-[#F4F6FA] text-[#0D1B3E] rounded-lg px-3 py-2
+Layout base
+<div className="bg-[#0D1B3E] min-h-screen text-white">
+🧠 4. Lógica PRO (esto te sube de nivel)
+Tu app NO debe ser solo visual. Debe tener:
+🔐 RBAC (Role-Based Access Control)
+Admin → todo
+Supervisor → monitoreo
+Usuario → acceso limitado
+👉 Esto es estándar en sistemas reales de acceso
+📊 Estados inteligentes
+Verde → acceso permitido
+Gris → inactivo
+Azul → en proceso
+⚡ Tiempo real
+Logs en vivo (simulado o real con WebSockets)
+
+README.md profesional
+Estructura para GitHub
