@@ -1,0 +1,207 @@
+https://www.figma.com/design/DBmmr0heOaB8vUbE7R8xFc/Control-de-acceso?t=BpUkf0itTJgbDBYy-1
+# 🔐 Control de Acceso - Documentación del Proyecto
+
+## 📌 Descripción
+
+Este proyecto consiste en el diseño y desarrollo de un sistema de **control de acceso (login)** basado en un prototipo creado en Figma.
+El objetivo es transformar un diseño UI en una aplicación funcional con frontend moderno y backend seguro.
+
+Figma es una herramienta ampliamente utilizada para diseñar interfaces, prototipos y sistemas de diseño colaborativos en tiempo real ([Figma][1]).
+
+---
+
+## 🎯 Objetivo del sistema
+
+* Permitir autenticación de usuarios
+* Validar credenciales
+* Mostrar estados de acceso (permitido / denegado)
+* Proveer una experiencia clara, moderna y accesible
+
+---
+
+## 🧩 Arquitectura del proyecto
+
+### 🔹 Frontend
+
+* React
+* Tailwind CSS
+* Componentes reutilizables
+
+### 🔹 Backend
+
+* Python (FastAPI)
+* Autenticación con JWT
+* API REST
+
+---
+
+## 🎨 Diseño UI (basado en Figma)
+
+### Principios aplicados
+
+* **Jerarquía visual clara**
+* **Consistencia en componentes**
+* **Contraste para accesibilidad**
+* **Espaciado uniforme (8px grid)**
+
+Estos principios son fundamentales en el diseño de interfaces modernas para mejorar la experiencia del usuario ([Figma][2]).
+
+---
+
+## 📱 Pantallas principales
+
+### 🔐 Login
+
+**Elementos:**
+
+* Input de usuario
+* Input de contraseña
+* Botón "Ingresar"
+* Mensajes de error
+
+**Estados:**
+
+* Default
+* Error (credenciales incorrectas)
+* Cargando
+
+---
+
+### ✅ Acceso concedido
+
+**Elementos:**
+
+* Mensaje de éxito
+* Indicador visual (verde)
+* Botón de continuar
+
+---
+
+### ❌ Acceso denegado
+
+**Elementos:**
+
+* Mensaje de error
+* Indicador visual (rojo)
+* Botón de reintento
+
+---
+
+### 📊 Dashboard (opcional)
+
+**Elementos:**
+
+* Bienvenida al usuario
+* Botón cerrar sesión
+* Estado del sistema
+
+---
+
+## 🧱 Componentes UI
+
+### Inputs
+
+* Bordes redondeados
+* Estados: focus, error, disabled
+
+### Botones
+
+* Primario: acción principal
+* Secundario: acciones alternas
+
+### Feedback visual
+
+* Verde → éxito
+* Rojo → error
+
+---
+
+## 🔐 Seguridad
+
+* Validación backend
+* Uso de tokens JWT
+* Protección de rutas
+* Manejo de errores HTTP
+
+---
+
+## ⚙️ Flujo del sistema
+
+1. Usuario ingresa credenciales
+2. Se envían al backend
+3. Backend valida información
+4. Respuesta:
+
+   * ✅ Token → acceso concedido
+   * ❌ Error → acceso denegado
+
+---
+
+## 🚀 Instalación
+
+### Backend
+
+```bash
+cd backend
+pip install -r requirements.txt
+uvicorn app.main:app --reload
+```
+
+---
+
+### Frontend
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+---
+
+## 📁 Estructura del proyecto
+
+```bash
+control-acceso/
+│
+├── backend/
+├── frontend/
+├── docs/
+│   ├── DESIGN_DIRECTION.md
+│   └── SCREEN_BLUEPRINTS.md
+```
+
+---
+
+## 📌 Buenas prácticas implementadas
+
+* Separación frontend/backend
+* Componentes reutilizables
+* Código escalable
+* Diseño basado en sistema (design system)
+* UX centrado en el usuario
+
+---
+
+## 🔮 Futuras mejoras
+
+* Base de datos (PostgreSQL / MongoDB)
+* Registro de usuarios
+* Recuperación de contraseña
+* Autenticación multifactor (MFA)
+* Deploy en la nube (Vercel / Render)
+
+---
+
+## 👨‍💻 Autor
+
+Proyecto desarrollado a partir de un diseño en Figma y llevado a código real.
+
+---
+
+## 📄 Licencia
+
+Uso académico / educativo
+
+[1]: https://www.figma.com/es-es/ui-design-tool/?utm_source=chatgpt.com "Herramienta gratuita de diseño UI online y software para equipos | Figma"
+[2]: https://www.figma.com/es-es/resource-library/principios-diseno-ui/?utm_source=chatgpt.com "7 principios clave del diseño de UI y cómo aplicarlo | Figma"
