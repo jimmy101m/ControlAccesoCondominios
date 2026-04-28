@@ -20,10 +20,6 @@ export default function ProtectedRoute({ children, allowedRoles }: ProtectedRout
       router.push("/login");
       return;
     }
-
-    if (user && !allowedRoles.includes(user.role_id as RoleName)) {
-      router.push("/login");
-    }
   }, [isAuthenticated, isLoading, user, allowedRoles, router]);
 
   if (isLoading) {

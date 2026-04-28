@@ -1,21 +1,22 @@
-"use client";
-import { useEffect } from "react";
-import { useAuthStore } from "@/store/auth-store";
+import type { Metadata } from "next";
+import "./globals.css";
+import { AuthProvider } from "@/components/AuthProvider";
+
+export const metadata: Metadata = {
+  title: "Control de Acceso Condominal",
+  description: "MVP de gestión de invitaciones y acceso",
+};
 
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const { hydrate } = useAuthStore();
-
-  useEffect(() => {
-    hydrate();
-  }, [hydrate]);
-
   return (
     <html lang="es">
-      <body>{children}</body>
+      <body>
+        <AuthProvider>{children}</AuthProvider>
+      </body>
     </html>
   );
 }
